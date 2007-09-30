@@ -31,3 +31,66 @@ $id$
 2007-9-25 0:47
 
 * 
+
+2007-9-27 22:54
+
+* 不能对一个表的下标域进行排序。在一个表中，所有的下标组成一个集合，但是是无序的。如果需要对其排序，必须将它们复制到一个array然后对这个array排序,eg:
+	lines = {
+		luaH_set = 10,
+		luaH_get = 24,
+		luaH_present = 48,
+	}
+	
+	function sortKey (v)
+		local array = {}
+		for key, value in ipairs(v) do
+			table.insert(array, key)
+		end
+		table.sort(array)
+
+		for i = 1, array.getn() do
+			v[array[i]] = v[array[i]]
+		end
+	end
+
+* Lua中string的操作
+	string.len(s)   		返回字符串的长度
+	string.rep(s, n)		返回重复n次字符串s的串
+	string.lower(s)			返回小写格式(string.upper(s)大写)
+	string.sub(s,i,j)		返回s中i到j的子串,索引从1开始，如果为负，则从后往前记（这一点同python）， -1是最后一个，-2是倒数第二个...
+	string.char和string.byte	字符与数字之间的转换
+		print(string.char(97)) --> a
+		i = 99; print(string.char(i, i+1, i+2)) --> cde
+		print(string.byte("abc")) --> 97
+		print(string.byte("abc", 2)) --> 98
+		print(string.byte("abc", -1)) --> 99
+	string.format			同C中sprintf
+	string.find			查找字符串中的子串的位置，未找到则返回nil
+	string.sub(dst,pattern,repstr)	用于查找匹配模式的串，并使用替换串替换
+	
+	Lua模式中所支持的所有字符类：
+		. 任意字符
+		%a 字母
+		%c 控制字符
+		%d 数字
+		%l 小写字母
+		%p 标点字符
+		%s 空白符
+		%u 大写字母
+		%w 字母和数字
+		%x 十六进制数字
+		%z 代表0的字符
+	上面字符类的大写形式表示小写形式所代表的结合的补集
+
+	%b用来匹配对称的字符。常写为'%bxy', x和y是任意两个不同的字符;x作为匹配的开始,用作为匹配的结束.比如'%b()'匹配'('开始,以')'结束的字符串
+	
+	Lua中字符串也是一个常量的，一旦赋值，这不允许改变
+
+* 终于知道哑元的意思了：哑元用于函数返回时，把不需要的用哑元表示
+	_, nvow = string.gsub(text, "[AEIOUaeiou]", "")
+	
+* Lua中局部变量仅仅在他们被初始化之后才可见
+
+* 辅助库的luaL_checkstring函数用来检测参数是否为字符串，与luaL_checknumber类似
+
+* 

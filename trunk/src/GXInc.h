@@ -1,7 +1,7 @@
 
 /*!
- * \file	GXInc.h
- * \author	ChenZaichun
+ * $Id$
+ * 
  * \date	Oct 14, 2007
  */
 

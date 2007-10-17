@@ -1,8 +1,7 @@
 
 /*!
- * \file	GXUtils.h
- * \author	ChenZaichun
- * \date	Oct 14, 2007
+ * $Id$
+ *
  * \brief	utilities for GearX
  */
 

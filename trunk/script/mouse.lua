@@ -1,6 +1,6 @@
 
 --[[
-	$Id: $
+	$Id$
 	
 	Mouse Message Management
 	CopyRight (c) GearX Team, 2007

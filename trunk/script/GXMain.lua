@@ -1,5 +1,5 @@
 --[[
-	$Id: $
+	$Id$
 	Desc:	GearX Main Script
 --]]
 

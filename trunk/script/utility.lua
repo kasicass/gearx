@@ -1,6 +1,6 @@
 
 --[[
-    $Id: $
+    $Id$
     
     utility functions
     CopyRight (c) GearX Team, 2007

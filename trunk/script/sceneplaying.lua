@@ -1,6 +1,6 @@
 
 --[[
-    $Id: $
+    $Id$
 	
 	Scene Playing
 	CopyRight (c) GearX Team, 2007

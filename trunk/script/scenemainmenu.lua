@@ -1,6 +1,6 @@
 
 --[[
-	$Id: $
+	$Id$
 	
 	main menu
 	CopyRight (c) GearX Team, 2007

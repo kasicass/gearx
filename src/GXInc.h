@@ -30,6 +30,12 @@
 #include "Binder.h"
 
 
+#define GXBITMAP_CLASSNAME	"WBitmap"
+#define GXCANVAS_CLASSNAME	"WCanvas"
+#define GXFILE_CLASSNAME	"WFile"				/// 用于注册类名
+#define GXOBJECT_CLASNAME	"WObject"
+#define GXSURFACE_CLASSNAME	"WSurface"
+
 #define new debug_new
 
 #endif

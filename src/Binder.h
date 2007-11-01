@@ -9,6 +9,7 @@
 #ifndef _BINDER_H
 #define _BINDER_H
 
+#include <assert.h>
 #include "GXLua.hpp"
 
 int newindex (lua_State* L);
@@ -22,6 +23,14 @@ public:
 		: L(L)
 	{
 	}
+
+	void pushint(int n) {
+		lua_pushinteger(L, n);
+	}
+
+	int checkint(int idx) {
+		return luaL_checkint(L, idx);
+	}
 	
 	void pushnumber (double n)
 	{
@@ -31,6 +40,20 @@ public:
 	double checknumber (int index)
 	{
 		return luaL_checknumber(L,index);
+	}
+
+	void pushboolean(bool b) {
+		lua_pushboolean(L, b);
+	}
+
+	bool checkboolean(int index) {
+		if (lua_isboolean(L, index)) {
+			return (lua_toboolean(L, index)) ? true : false;
+		}
+
+		assert(false);
+
+		return false;
 	}
 
 	void pushstring (const char* s)
@@ -91,7 +114,15 @@ public:
 			lua_rawset(L, LUA_ENVIRONINDEX);   // envtable[address] = udata
 		}
 	} 
+
+	void pushpointer(void* udata) {
+		lua_pushlightuserdata(L, udata);
+	}
 	
+	void* checkpointer(int idx) {
+		return lua_touserdata(L, idx);
+	}
+
 	void *checkusertype (int index, const char *tname) 
 	{
 		lua_getfield(L, LUA_REGISTRYINDEX, tname);   /* get metatable of given type */

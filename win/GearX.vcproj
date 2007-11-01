@@ -21,7 +21,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../include/wpp,../include/fmod"
+				AdditionalIncludeDirectories="../include/wpp,../include/fmod,../lua51"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="5"
@@ -42,7 +42,7 @@
 				OutputFile="../bin/GearXD.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="../lib"
+				AdditionalLibraryDirectories="../lib, ../bin/"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\../bin/GearXD.pdb"
 				SubSystem="2"
@@ -88,7 +88,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="../include/wpp,../include/fmod"
+				AdditionalIncludeDirectories="../include/wpp,../include/fmod,../lua51"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="TRUE"
 				RuntimeLibrary="4"
@@ -108,7 +108,7 @@
 				OutputFile=".\../bin/GearX.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="../lib"
+				AdditionalLibraryDirectories="../lib,../bin"
 				ProgramDatabaseFile=".\../bin/GearX.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
@@ -197,6 +197,9 @@
 				RelativePath="..\src\GXCanvas.cpp">
 			</File>
 			<File
+				RelativePath="..\src\GXFont.cpp">
+			</File>
+			<File
 				RelativePath="..\src\GXMain.cpp">
 			</File>
 			<File
@@ -217,6 +220,9 @@
 			</File>
 			<File
 				RelativePath="..\src\GXCanvas.h">
+			</File>
+			<File
+				RelativePath="..\src\GXFont.h">
 			</File>
 			<File
 				RelativePath="..\src\GXMusic.h">

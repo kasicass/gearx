@@ -5,6 +5,9 @@
  * \brief	Lua header files for C++
  *			<<extern "C">> not supplied automatically because Lua 
  *			also compiles as C++
+ *
+ * CopyRight (c) GearX Team, 2007
+ * See LISENCE for more information
  */
 
 #ifndef _GX_LUA_HPP
@@ -24,7 +27,12 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 
+#if defined DEBUG || defined _DEBUG
+#pragma comment(lib, "lua51D.lib")
+#else
 #pragma comment(lib, "lua51.lib")
+#endif
+
 
 //void error(lua_State* L, const char* fmt, ...)
 //{

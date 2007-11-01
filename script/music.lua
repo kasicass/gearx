@@ -1,5 +1,5 @@
 --[[
-	$Id: $
+	$Id$
 	
 	Music
 	CopyRight (c) GearX Team, 2007

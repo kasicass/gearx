@@ -1,6 +1,6 @@
 
 --[[
-	$Id: $
+	$Id$
 	
 	Animation
 	CopyRight (c) GearX Team, 2007

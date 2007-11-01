@@ -1,6 +1,6 @@
 
 --[[
-    $Id: $
+    $Id$
 	
 	On/off button
 	CopyRight (c) GearX Team, 2007

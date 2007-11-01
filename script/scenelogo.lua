@@ -1,6 +1,6 @@
 
 --[[
-	$Id: $
+	$Id$
 	
 	GearX scene logo
 --]]

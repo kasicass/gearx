@@ -1,6 +1,6 @@
 
 --[[
-    $Id: $
+    $Id$
 	
 	option 
 	CopyRight (c) GearX Team, 2007

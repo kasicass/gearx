@@ -1,6 +1,6 @@
 
 --[[
-	$Id: $
+	$Id$
 	
 	Timer
 	CopyRight (c) GearX Team, 2007

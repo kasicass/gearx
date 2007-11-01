@@ -1,6 +1,6 @@
 
 --[[
-    $Id: $
+    $Id$
 	
 	Keyboard Message Handler
 	CopyRight (c) GearX Tearm, 2007

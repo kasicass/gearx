@@ -13,6 +13,7 @@
 #include "GXSurface.h"
 #include "GXMusic.h"
 #include "GXTimer.h"
+#include "GXFont.h"
 
 #if defined DEBUG || defined _DEBUG
 #pragma comment(linker, "/SUBSYSTEM:CONSOLE")
@@ -64,22 +65,12 @@ static int pmain (lua_State* L)
 	luaopen_GXSurfaceLib(L);
 	luaopen_GXMusicLib(L);
 	luaopen_GXTimer(L);
+	luaopen_FontLib(L);
 
 	return 0;
 }
 
 #define MAIN_SCRIPT		"../script/GXMain.lua"
-
-void* getfield (lua_State* L, const char *key) {
-	void* result;
-	lua_pushstring(L, key);
-	lua_gettable(L, -2);			/* get scene[key] */
-//	if (!lua_isnumber(L, -1))
-//		error(L, "invalid component table");
-	result = (void*)lua_topointer(L, -1);
-	lua_pop(L, 1); /* remove number */
-	return result;
-}
 
 HWND CreateMainWindow(HINSTANCE hInstance, char *lpCmdLine,int nCmdShow)
 {
@@ -196,6 +187,12 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,
 	//	sprintf(sz, "%s", lua_tostring(L, -1));
 	//	return 1;
 	//}
+
+	lua_getglobal(L, "GXExit");
+	if (lua_pcall(L, 0, 0, 0) != 0) {
+		printf("%s", lua_tostring(L, -1));
+		return 1;
+	}
 
 	lua_close(L);
 

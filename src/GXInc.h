@@ -35,6 +35,7 @@
 #define GXFILE_CLASSNAME	"WFile"				/// 用于注册类名
 #define GXOBJECT_CLASNAME	"WObject"
 #define GXSURFACE_CLASSNAME	"WSurface"
+#define GXFONT_CLASSNAME	"WFont"
 
 #define new debug_new
 

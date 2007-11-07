@@ -16,7 +16,7 @@
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-	$Id$
+	$Id: $
 	ChenZaichun@gmail.com
 
 	TAB SIZE: 4
@@ -25,10 +25,40 @@
 -------------------------------------------------------------------------------
 
 
-local Utility = {}
+SceneHighScore = {}
 
-function Utility.printf(fmt, ...)
-    print(fmt:format(...))
+local HIGHSCORE_PIC_PATH = "data/pic/highscore/"
+
+-------------------------------------------------------------------------------
+function SceneHighScore.Init ()
+	local self = {}
+
+	self._bg = WBitmap.Load(MAIN_RES_PKG,
+							HIGHSCORE_PIC_PATH .. "background.bmp")
+
+	KeyListener.Regist("ESC", function ()
+								  pcall(SetGameState, GAME_STATES.MAINMENU)
+							  end)
+
+	self._change = true
+	setmetatable(self, {__index = SceneHighScore})
+
+	return self
 end
 
-printf = Utility.printf
+-------------------------------------------------------------------------------
+function SceneHighScore:Destroy()
+	KeyListener.RemoveAll()
+end
+
+-------------------------------------------------------------------------------
+function SceneHighScore:Draw (canvas)
+	if (self._change) then
+		canvas:Change()
+		self._change = false
+	else
+		canvas:UnChange()
+	end
+
+	self._bg:Draw(canvas, 0, 0, BLIT_STYLE.BLIT_COPY)
+end

@@ -12,8 +12,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\../bin"
-			IntermediateDirectory=".\../build/Debug"
+			OutputDirectory="../bin"
+			IntermediateDirectory="../build/GearX/Debug"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -25,14 +25,14 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="5"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\../build/Debug/GearX.pch"
-				AssemblerListingLocation=".\../build/Debug/"
-				ObjectFile=".\../build/Debug/"
-				ProgramDataBaseFileName=".\../build/Debug/"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderFile="$(IntDir)/GearX.pch"
+				AssemblerListingLocation=""
+				ObjectFile="$(IntDir)/"
+				ProgramDataBaseFileName="$(IntDir)/vc70.pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
 				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -78,8 +78,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\../bin"
-			IntermediateDirectory=".\../build/Release"
+			OutputDirectory="../bin"
+			IntermediateDirectory="../build/GearX/Release"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -93,11 +93,11 @@
 				StringPooling="TRUE"
 				RuntimeLibrary="4"
 				EnableFunctionLevelLinking="TRUE"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\../build/Release/GearX.pch"
-				AssemblerListingLocation=".\../build/Release/"
-				ObjectFile=".\../build/Release/"
-				ProgramDataBaseFileName=".\../build/Release/"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderFile="$(IntDir)/GearX.pch"
+				AssemblerListingLocation=""
+				ObjectFile="$(IntDir)/"
+				ProgramDataBaseFileName="$(IntDir)/vc70.pdb"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
 				CompileAs="0"/>

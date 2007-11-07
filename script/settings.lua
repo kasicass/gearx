@@ -16,19 +16,51 @@
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-	$Id$
+	$Id: $
 	ChenZaichun@gmail.com
 
 	TAB SIZE: 4
 --]]
 
 -------------------------------------------------------------------------------
+-- require files
+dofile("../script/cfg.lua")
+dofile("../script/serialize.lua")
 
-
-local Utility = {}
-
-function Utility.printf(fmt, ...)
-    print(fmt:format(...))
+-------------------------------------------------------------------------------
+-- return music setting
+function IsPlayMusic ()
+	return GAME_SETTING.MUSIC
 end
 
-printf = Utility.printf
+-- return sound setting
+function IsPlaySound ()
+	return GAME_SETTING.SOUND
+end
+
+function PlayMusic (play)
+	GAME_SETTING.MUSIC = play
+end
+
+function PlaySound (play)
+	GAME_SETTING.SOUND = play
+end
+
+function FullScreen (fs)
+	GAME_SETTING.FULLSCREEN = fs
+end
+
+function IsFullScreen ()
+	return GAME_SETTING.FULLSCREEN
+end
+
+-------------------------------------------------------------------------------
+-- save settings
+function SaveSettings ()
+	local f = assert(io.open("../script/cfg.lua", "w"))
+	local str = "GAME_SETTING = " .. serialize(GAME_SETTING)
+	f:write(str)
+	f:close()
+end
+
+-------------------------------------------------------------------------------

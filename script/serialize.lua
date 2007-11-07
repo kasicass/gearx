@@ -16,19 +16,37 @@
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-	$Id$
+	$Id: $
 	ChenZaichun@gmail.com
 
 	TAB SIZE: 4
 --]]
 
 -------------------------------------------------------------------------------
-
-
-local Utility = {}
-
-function Utility.printf(fmt, ...)
-    print(fmt:format(...))
+-- serialize objects
+-- \return the result string
+function serialize (o)
+	local str = ""
+	if type(o) == "number" then
+		str = str .. o
+	elseif type(o) == "string" then
+		str = str .. "\"" .. o .. "\""
+	elseif type(o) == "boolean" then
+		str = str .. tostring(o)
+	elseif type(o) == "table" then
+		str = str .. "{\n"
+		for k, v in pairs(o) do
+			str = str .. "\t" .. k .. " = "
+			str = str .. serialize(v)
+			str = str .. ",\n"
+		end
+		str = str .. "}\n"
+	else
+		error("can not serialize " .. type(o))
+	end
+	
+	return str
 end
 
-printf = Utility.printf
+    
+

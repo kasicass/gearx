@@ -1,13 +1,29 @@
 
 --[[
+    Copyright (C) 2007 GearX Team
+
+    This source code is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    This source code is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
 	$Id$
-	
-	main menu
-	CopyRight (c) GearX Team, 2007
-	See LICENSE for more information
+	ChenZaichun@gmail.com
 
 	TAB SIZE: 4
 --]]
+
+-------------------------------------------------------------------------------
+
 
 SceneMainMenu = {}
 
@@ -44,7 +60,9 @@ function SceneMainMenu.Init ()
 	self._btn_hover = Music.Load(MAIN_RES_PKG, 
 				SOUND_PATH .. "mouse_on_button.wav",
 				Music.TYPE.SAMPLE)
-	self._bgm:Play(Music.TYPE.STREAM)
+	if (IsPlayMusic()) then
+		self._bgm:Play(Music.TYPE.STREAM)
+	end
 
 	KeyListener.Regist ("UP", function () print("UP") end)
 
@@ -54,8 +72,10 @@ function SceneMainMenu.Init ()
 				   local ret = Button.IsCover(obj, x, y)
 				   if (ret) then
 --					   if (lastbtn ~= obj) then
+					   if (IsPlaySound()) then
 						   self._btn_hover:Play(Music.TYPE.SAMPLE)
 --						   lastbtn = obj
+					   end
 --					   end
 				   end
 				   return ret
@@ -86,6 +106,21 @@ function SceneMainMenu.Init ()
 						 BtnMouseDown(self._btn_start, GAME_STATES.PLAYING))
 	MouseListener.Regist("LBUTTONDOWN", 
 						 BtnMouseDown(self._btn_option, GAME_STATES.OPTION))
+	MouseListener.Regist("LBUTTONDOWN",
+						 BtnMouseDown(self._btn_highscore, GAME_STATES.HIGHSCORE))
+	MouseListener.Regist("LBUTTONDOWN",
+						 BtnMouseDown(self._btn_credit, GAME_STATES.CREDIT))
+
+	MouseListener.Regist("LBUTTONDOWN",
+						 function (x, y) 
+							 local ret = self._btn_exit:IsCover(x, y)
+							 if (ret) then
+								 Quit()
+							 end
+							 return ret
+						 end)
+
+	KeyListener.Regist("ESC", function () Quit() end)
 
 --	MouseListener.Regist("LBUTTONDOWN", BtnMouseMoveMsg(self._btn_exit))
 --	MouseListener.Regist("LBUTTONDOWN", BtnMouseMoveMsg(self._btn_option))
@@ -107,6 +142,7 @@ end
 
 function SceneMainMenu:Destroy ()
 	MouseListener.RemoveAll()
+	KeyListener.RemoveAll()
 	printf("SceneMainMenu:Destory")
 	self._bgm:UnLoad(Music.TYPE.STREAM)
 	self._btn_hover:UnLoad(Music.TYPE.SAMPLE)

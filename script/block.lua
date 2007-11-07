@@ -17,67 +17,99 @@
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-	$Id$
+	$Id: $
 	ChenZaichun@gmail.com
 --]]
 
 -------------------------------------------------------------------------------
 
-Timer = {}
---setmetatable(Timer, {__index = GXTimer})
+-------------------------------------------------------------------------------
+-- for holding blocks
+Block = {}
 
 -------------------------------------------------------------------------------
--- create a new timer
--- \param duration: duration of the timer
--- \return the timer
-function Timer.New (duration)
+-- init block container
+function Block.Init ()
 	local self = {}
-	self._timer = GXTimer.Create()
-	self._duration = duration or 100
-	self._active = false
 
-	setmetatable(self, {__index = Timer})
-	
+	for i = 1, BLOCK_WIDTH do
+		self[i] = {}
+		for j = 1, BLOCK_HEIGHT do
+			self[i][j] = 0
+		end
+	end
+
+	setmetatable(self, {__index = Block})
+
+-- 	str = serialize(self)
+-- 	print(str)
+
 	return self
 end
 
 -------------------------------------------------------------------------------
--- reset the timer duration
-function Timer:SetDuration (duration)
-	self._duration = duration
+-- add block to container
+function Block:Add (x, y, idx)
+	self[x][y] = idx
 end
 
 -------------------------------------------------------------------------------
--- start the timer
-function Timer:Start ()
-	self._active = true
-	self._timer:Start()
-end
-
--------------------------------------------------------------------------------
--- stop the timer
-function Timer:Stop ()
-	self._active = false
-	self._timer:Stop()
-end
-
--------------------------------------------------------------------------------
--- test for the timer is atcive
-function Timer:IsActive ()
-	if (not self._active) then return false end
-	
-	duration = self._timer:GetTime()
-	if (duration >= self._duration) then
-		self._timer:Reset()
-		return true
+-- reset block
+function Block:Reset ()
+	for i = 1, BLOCK_WIDTH do
+		for j = 1, BLOCK_HEIGHT do
+			self[i][j] = 0
+		end
 	end
 end
 
-
 -------------------------------------------------------------------------------
--- reset timer
-function Timer:Reset()
-	self._timer:Reset()
+-- add triblock to container
+function Block:AddTri (triblock)
+--[[	local x = triblock:XIdx()
+	local y = triblock:YIdx()
+
+	self[x][y] = triblock:GetIdx(1)
+	self[x][y+1] = triblock:GetIdx(2)
+	self[x][y+2] = triblock:GetIdx(3) 
+--]]
 end
 
 -------------------------------------------------------------------------------
+-- get block info
+function Block:GetImgIdx (x, y)
+	printf("x, y: %d, %d", x, y)
+-- 	str = serialize(self[x])
+-- 	print(str)
+-- 	print(rawget(self[x], y))
+ 	return self[x][y]
+--	return rawget(self[x], y)
+end
+
+-------------------------------------------------------------------------------
+-- remove block from container
+function Block:Remove(x, y)
+	self[x][y] = 0
+end
+
+-------------------------------------------------------------------------------
+-- draw blocks
+function Block:Draw (canvas, gears)
+--[[	for i, t in ipairs(self) do
+		for j, v in ipairs(t) do
+			if (v > 0) then
+				gears:Draw(canvas, i*BLOCK_SIZE, j*BLOCK_SIZE, v)
+			end
+		end
+	end
+--]]
+end
+
+-------------------------------------------------------------------------------
+-- check truncate
+function Block:CheckTrunk ()
+	
+end
+
+-------------------------------------------------------------------------------
+--

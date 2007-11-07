@@ -1,17 +1,41 @@
+
 --[[
+    Copyright (C) 2007 GearX Team
+
+    This source code is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    This source code is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
 	$Id$
-	Desc:	GearX Main Script
+	ChenZaichun@gmail.com
+
+	TAB SIZE: 4
 --]]
 
+-------------------------------------------------------------------------------
+-- utilities
 dofile("../script/utility.lua")
+dofile("../script/settings.lua")
 dofile("../script/button.lua")
 dofile("../script/mouse.lua")
 dofile("../script/keyboard.lua")
 dofile("../script/music.lua")
 
+-------------------------------------------------------------------------------
 MAIN_RES_PKG = "data.wdf"
 SOUND_PATH = "data/sound/"
 
+-------------------------------------------------------------------------------
 BLIT_STYLE = {
 	BLIT_NORMAL = 0,
 	BLIT_COPY	= 0,
@@ -27,7 +51,7 @@ GAME_STATES = {
 	MAINMENU	= 2,
 	PLAYING		= 3,
 	OPTION		= 4,
-	HIGHTSCORE	= 5,
+	HIGHSCORE	= 5,
 	CREDIT      = 6,
 }
 
@@ -37,6 +61,10 @@ WND_MSG = {
 	WM_LBUTTONDOWN = 0X0201,
 }
 
+-------------------------------------------------------------------------------
+font = WFont.Create("Verdana", 24)
+
+-------------------------------------------------------------------------------
 GameState = {
 --	_state = GAME_STATES.INIT,
 	_state = GAME_STATES.MAINMENU,
@@ -50,16 +78,21 @@ function SetGameState (state)
 	GameState._scene = nil
 end
 
+-------------------------------------------------------------------------------
 dofile("../script/scenelogo.lua")
 dofile("../script/scenemainmenu.lua")
 dofile("../script/sceneplaying.lua")
 dofile("../script/sceneoption.lua")
+dofile("../script/scenehighscore.lua")
+dofile("../script/scenecredit.lua")
 
 GameState._INITFUNC = {
 	SceneLogo.Init,
 	SceneMainMenu.Init,
 	ScenePlaying.Init,
 	SceneOption.Init,
+	SceneHighScore.Init,
+	SceneCredit.Init,
 }
 
 GameState._DRAWFUNC = {
@@ -67,7 +100,11 @@ GameState._DRAWFUNC = {
 	SceneMainMenu.Draw,
 	ScenePlaying.Draw,
 	SceneOption.Draw,
+	SceneHighScore.Draw,
+	SceneCredit.Draw,
 }
+
+-------------------------------------------------------------------------------
 
 local canvas					-- canvas
 local surface					-- surface
@@ -106,9 +143,16 @@ function GXKeyDown (key)
 	KeyListener.Check(key)
 end
 
+function GXExit ()
+	SaveSettings()
+	GameState._scene:Destroy()
+	GameState._scene = nil
+	font = nil
+end
+
 -- wnd proc
 function WndProc (msg, wparam, lparam)
-	if (msg == WND_MSG.WM_KEYDWON) then
+	if (msg == WND_MSG.WM_KEYDOWN) then
 		GXKeyDown(wparam)
 	elseif (msg == WND_MSG.WM_MOUSEMOVE) then
 		GXMouseMove(LOWORD(lparam), HIWORD(lparam))

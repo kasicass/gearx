@@ -1,3 +1,4 @@
+-- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -18,21 +19,22 @@
 
 	$Id$
 	ChenZaichun@gmail.com
-
-	TAB SIZE: 4
 --]]
 
 -------------------------------------------------------------------------------
 -- utilities
+dofile("../script/timer.lua")
 dofile("../script/utility.lua")
 dofile("../script/settings.lua")
 dofile("../script/button.lua")
 dofile("../script/mouse.lua")
 dofile("../script/keyboard.lua")
 dofile("../script/music.lua")
+dofile("../script/animation.lua")
 
 -------------------------------------------------------------------------------
-MAIN_RES_PKG = "data.wdf"
+MAIN_PATH = "" -- "../data/"
+MAIN_RES_PKG = MAIN_PATH .. "data.wdf"
 SOUND_PATH = "data/sound/"
 
 -------------------------------------------------------------------------------
@@ -68,6 +70,7 @@ font = WFont.Create("Verdana", 24)
 GameState = {
 --	_state = GAME_STATES.INIT,
 	_state = GAME_STATES.MAINMENU,
+--	_state = GAME_STATES.PLAYING,
 	_laststate = -1
 }
 
@@ -106,15 +109,15 @@ GameState._DRAWFUNC = {
 
 -------------------------------------------------------------------------------
 
-local canvas					-- canvas
-local surface					-- surface
+local g_canvas					-- canvas
+local g_surface					-- surface
 
 -- init function
 function GXInit (hwnd)
-	canvas = WCanvas.Create(800, 600)
-	surface = WSurface.Create(hwnd, canvas)
-	canvas:Reset(30)
-	canvas:Clear(0xffffff)
+	g_canvas = WCanvas.Create(800, 600)
+	g_surface = WSurface.Create(hwnd, g_canvas)
+	g_canvas:Reset(30)
+	g_canvas:Clear(0xffffff)
 	Music.Init();
 end
 
@@ -126,9 +129,9 @@ function GXMain ()
 		printf("current state is %d", GameState._state)
 	end
 	
-	ret = pcall(GameState._DRAWFUNC[GameState._state], GameState._scene, canvas)
+	ret = pcall(GameState._DRAWFUNC[GameState._state], GameState._scene, g_canvas)
 
-	surface:Blit2Screen()
+	g_surface:Blit2Screen()
 end
 
 function GXMouseMove (x, y)
@@ -144,6 +147,7 @@ function GXKeyDown (key)
 end
 
 function GXExit ()
+	SaveHighScore()
 	SaveSettings()
 	GameState._scene:Destroy()
 	GameState._scene = nil

@@ -1,3 +1,7 @@
+-- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
+
+-------------------------------------------------------------------------------
+
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -18,19 +22,15 @@
 
 	$Id$
 	ChenZaichun@gmail.com
-
-	TAB SIZE: 4
 --]]
 
 -------------------------------------------------------------------------------
-
-
 SceneMainMenu = {}
-
-dofile("../script/animation.lua")
 
 local MAINMENU_SCENE_PIC_PATH = "data/pic/mainmenu/"
 
+-------------------------------------------------------------------------------
+-- 
 function SceneMainMenu.Init ()
 	local self = {}
 
@@ -122,17 +122,11 @@ function SceneMainMenu.Init ()
 
 	KeyListener.Regist("ESC", function () Quit() end)
 
---	MouseListener.Regist("LBUTTONDOWN", BtnMouseMoveMsg(self._btn_exit))
---	MouseListener.Regist("LBUTTONDOWN", BtnMouseMoveMsg(self._btn_option))
---	MouseListener.Regist("LBUTTONDOWN", BtnMouseMoveMsg(self._btn_credit))
---	MouseListener.Regist("LBUTTONDOWN", BtnMouseMoveMsg(self._btn_highscore))
-	
 	self._ani = Animation.New(MAIN_RES_PKG, 
 							  "data/pic/mainmenu/mainmenu_cucuma.bmp",
 							  4, false, 0, 400, 300)
+	self._ani:SetDuration(60)
 	self._ani:Start()
-
-	print(type(self._bg))
 
 	self._change = true
 	setmetatable(self, {__index = SceneMainMenu})

@@ -1,4 +1,4 @@
--- emacs: -*- lua-mode -*- TAB SIZE: 4 -*- 
+-- emacs: -*- lua -*- TAB SIZE: 4 -*- 
 
 --[[
     Copyright (C) 2007 GearX Team

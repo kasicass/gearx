@@ -1,3 +1,4 @@
+-- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -18,8 +19,6 @@
 
 	$Id: $
 	ChenZaichun@gmail.com
-
-	TAB SIZE: 4
 --]]
 
 -------------------------------------------------------------------------------
@@ -31,20 +30,20 @@ Spark = {}
 -- \param y: y coordinate
 function Spark.New (x, y)
 	local self = {
-		_x = x,
-		_y = y,
-		_frame = 1,
-		_dx = math.random(-10, 10),
-		_dy = math.random(-10, -40),
+		_x = x or 1,
+		_y = y or 1,
 		_frame = 1,
 	}
+
+	self._dx = math.random(-10, 10)
+	self._dy = math.random(-40, -10)
 
 	if (self._dy > -20) then
 		self._dyacc = math.random(2, 3)
 	elseif (self._dy > -30) then
 		self._dyacc = math.random(3, 4)
 	else
-		self._dyacc = math.random(4, 4)
+		self._dyacc = math.random(4, 5)
 	end
 
 	setmetatable(self, {__index = Spark})
@@ -55,7 +54,7 @@ end
 -------------------------------------------------------------------------------
 -- move the sparks
 function Spark:Move ()
-	self._x = self._x + dx;
+	self._x = self._x + self._dx
 
 	-- x axis
 	if (self._x < 0) then
@@ -95,7 +94,9 @@ function SparkSystem.Init ()
 
 	self._sparks = {}
 	self._timermotion = Timer.New(30)
-	self._timerframe = Timer.New(50)
+	self._timerframe = Timer.New(30)
+	self._timermotion:Start()
+	self._timerframe:Start()
 
 	return self
 end
@@ -103,22 +104,27 @@ end
 -------------------------------------------------------------------------------
 -- Create Spark
 function SparkSystem:CreateSpark(x, y)
-	table.insert(self._sparks, Spark.New(x, y))
+	local spark = Spark.New(x, y)
+	table.insert(self._sparks, spark)
+--	print("count: ", #self._sparks)
 end
 
 -------------------------------------------------------------------------------
 -- Draw Sparks
 function SparkSystem:Draw (canvas)
+--	print("324")
+--	print("sparks: ", #self._sparks)
 	if (#self._sparks == 0) then
 		return
 	end
 
 	for i = 1, #self._sparks do
 		self[self._sparks[i]._frame]:Draw(canvas, 
-										  self._sparks[i]._x + BLOCK_OFFSET_X,
-										  self._sparks[i]._y + BLOCK_OFFSET_Y,
-										  BLIT_STYLE.BLIT_MASK)
+					 self._sparks[i]._x + BLOCK_OFFSET_X,
+					 self._sparks[i]._y + BLOCK_OFFSET_Y,
+					  BLIT_STYLE.BLIT_MASK)
 	end
+
 end
 
 -------------------------------------------------------------------------------
@@ -131,25 +137,31 @@ end
 -- moving sparks
 function SparkSystem:Move ()
 	local count = #self._sparks
+--	print("move count: ", count)
 	if (count == 0) then return end
 
-	self._timermotion:Start()
 	if (self._timermotion:IsActive()) then
 		for i = 1, count do
 			self._sparks[i]:Move()
 		end
 	end
 
-	self._timerframe:Start()
 	if (self._timerframe:IsActive()) then
-		for i = 1, count do
-			if self._sparks[i]._frame > SPARK_TOTAL_COUNT - 1 then
+		local i = 1
+		while (i <= count) do
+--			print("frame: ", self._sparks[i]._frame)
+			if (self._sparks[i]._frame >= SPARK_TOTAL_COUNT) then
+--				print("remove")
 				table.remove(self._sparks, i)
+				count = count - 1
 			else
 				self._sparks[i]._frame = self._sparks[i]._frame + 1
+				i = i + 1
 			end
 		end
 	end
+
+--	print("count: ", #self._sparks)
 end
 
 -------------------------------------------------------------------------------

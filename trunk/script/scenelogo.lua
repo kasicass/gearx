@@ -1,3 +1,4 @@
+-- emacs: -*- lua-mode -*- TAB SIZE: 4 -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -18,8 +19,6 @@
 
 	$Id$
 	ChenZaichun@gmail.com
-
-	TAB SIZE: 4
 --]]
 
 -------------------------------------------------------------------------------

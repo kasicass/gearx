@@ -1,3 +1,4 @@
+-- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -18,18 +19,25 @@
 
 	$Id$
 	ChenZaichun@gmail.com
-
-	TAB SIZE: 4
 --]]
 
 -------------------------------------------------------------------------------
-
-
-dofile("../script/timer.lua")
-
+-- animation class
 Animation = {}
 
-function Animation.New(pkgname, filename, frames, vertical, x, y, dration)
+-------------------------------------------------------------------------------
+-- create animation
+--
+-- @param pkgname	wdf package name
+-- @param filename	file of the bitmap
+-- @param frame		total frames
+-- @param vertical	is bitmap vertically?
+-- @param x			x coordinate
+-- @param y			y coordinate
+-- @param duration	duration of animation
+--
+-- @return animation obj
+function Animation.New(pkgname, filename, frames, vertical, x, y, duration)
 	local self= {
 		_frames = frames,
 		_x = x or 0,
@@ -63,23 +71,58 @@ function Animation.New(pkgname, filename, frames, vertical, x, y, dration)
 	return self
 end
 
-function Animation:SetPos(x, y)
-	self._x = x;
-	self._y = y;
+-------------------------------------------------------------------------------
+-- get animation width
+--
+-- @return animation width 
+function Animation:W()
+	return self[1]:W()
 end
 
+-------------------------------------------------------------------------------
+-- get animation height
+-- 
+-- @return animation height
+function Animation:H()
+	return self[1]:H()
+end
+
+-------------------------------------------------------------------------------
+-- set animation position
+-- 
+-- @param x		x coordinate
+-- @param y		y coordinate
+function Animation:SetPos(x, y)
+	self._x = x
+	self._y = y
+end
+
+-------------------------------------------------------------------------------
+-- set animation duration
+-- 
+-- @param duration time count
 function Animation:SetDuration(duration)
 	self._timer:SetDuration(duration)
 end
 
+-------------------------------------------------------------------------------
+-- start animation
+-- 
 function Animation:Start()
 	self._timer:Start()
 end
 
+-------------------------------------------------------------------------------
+-- stop animation
+-- 
 function Animation:Stop()
 	self._timer:Stop()
 end
 
+-------------------------------------------------------------------------------
+-- draw the animation
+-- 
+-- @param canvas canvas to be drawn on
 function Animation:Draw(canvas)
 	if (self._timer:IsActive()) then
 		self._current = math.fmod(self._current + 1, self._frames)
@@ -94,3 +137,5 @@ function Animation:Draw(canvas)
 
 	self[self._current+1]:Draw(canvas, self._x, self._y, BLIT_STYLE.BLIT_MASK)
 end
+
+-------------------------------------------------------------------------------

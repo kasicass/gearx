@@ -1,4 +1,4 @@
-/*  emacs: -*- c-mode -*- TAB SIZE: 4 -*-  */
+/*  emacs: -*- mode: cc; coding: gb2312 -*- TAB SIZE: 4 -*-  */
 
 /*
     Copyright (C) 2007 GearX Team
@@ -23,43 +23,131 @@
 
 #include "GXTimer.h"
 
-//////////////////////////////////////////////////////////////////////////
-/*
+///////////////////////////////////////////////////////////////////////////////
+/** 
+ * 使用QueryPerformanceCount来计时
+ * 
+ */
 class GXTimer
 {
 public:
-	GXTimer();
-	
+	/** 
+	 * 
+	 * 
+	 */
 	void Start() {
 		QueryPerformanceCounter(&_lasttime);
 	}
-	
+
+	/** 
+	 * 
+	 * 
+	 * 
+	 * @return 
+	 */
 	DWORD Stop() {
 		QueryPerformanceFrequency(&_frequency);
 		QueryPerformanceCounter(&_current);
-		int delta = (_current.LowPart - _lasttime.LowPart) * (int)_frequency;
+		double delta = ((double)(_current.QuadPart-_lasttime.QuadPart)) * 1000 
+					/(double)_frequency.QuadPart;
 		_lasttime = _current;
-		return delta;
+		return (DWORD)(delta);
 	}
+
+	/** 
+	 * 
+	 * 
+	 * 
+	 * @return 
+	 */
 	DWORD GetTime() {
 		QueryPerformanceFrequency(&_frequency);
 		QueryPerformanceCounter(&_current);
-		int delta = (_current.LowPart - _lasttime.LowPart)*_frequency;
+		double delta = ((double)(_current.QuadPart-_lasttime.QuadPart)) * 1000 
+						/(double)_frequency.QuadPart;
 		_lasttime = _current;
-		return delta;
+		return (DWORD)(delta);
 	}
 
+	/** 
+	 * 
+	 * 
+	 */
 	void Reset() {
 		QueryPerformanceCounter(&_current);
 		_lasttime = _current;
 	}
 
 private:
-	LARGE_INTEGER			_lasttime;					/// last time info	
-	LARGE_INTEGER			_current;
-	static LARGE_INTEGER	_frequency;					/// current frequence of the CPU
+	LARGE_INTEGER			_lasttime; 		/**< last time  */
+	LARGE_INTEGER			_current; 		/**< for storing current time */
+	static LARGE_INTEGER	_frequency;		/**< current frequence of the CPU */
 };
-*/
+
+LARGE_INTEGER GXTimer::_frequency;
+
+///////////////////////////////////////////////////////////////////////////////
+static int GXTimer_Create(lua_State* L)
+{
+	LuaBinder binder(L);
+	GXTimer* timer = new GXTimer;
+
+	binder.pushusertype(timer, GXTIMER_CLASSNAME);
+
+	return 1;
+}
+
+static int GXTimer_Destory(lua_State* L)
+{
+	LuaBinder binder(L);
+	GXTimer* timer = (GXTimer*)(binder.checkusertype(1, GXTIMER_CLASSNAME));
+
+	SAFEDELETE(timer);
+
+	return 0;
+}
+
+static int GXTimer_Start(lua_State* L)
+{
+	LuaBinder binder(L);
+	GXTimer* timer = (GXTimer*)(binder.checkusertype(1, GXTIMER_CLASSNAME));
+
+	timer->Start();
+
+	return 0;	
+}
+
+static int GXTimer_Stop(lua_State* L)
+{
+	LuaBinder binder(L);
+	GXTimer* timer = (GXTimer*)(binder.checkusertype(1, GXTIMER_CLASSNAME));
+
+	timer->Stop();
+
+	return 0;
+}
+
+static int GXTimer_GetTime(lua_State* L)
+{
+	LuaBinder binder(L);
+	GXTimer* timer = (GXTimer*)(binder.checkusertype(1, GXTIMER_CLASSNAME));
+	int time = timer->GetTime();
+
+	binder.pushnumber((double)(time));
+
+	return 1;
+}
+
+static int GXTimer_Reset(lua_State* L)
+{
+	LuaBinder binder(L);
+	GXTimer* timer = (GXTimer*)(binder.checkusertype(1, GXTIMER_CLASSNAME));
+
+	timer->Reset();
+
+	return 0;
+}
+/*
 //////////////////////////////////////////////////////////////////////////
 static int GXTimer_Create(lua_State* L)
 {
@@ -117,6 +205,7 @@ static int GXTimer_Reset(lua_State* L)
 
 	return 0;
 }
+*/
 
 //////////////////////////////////////////////////////////////////////////
 static const luaL_reg GXTimerLib[] = {

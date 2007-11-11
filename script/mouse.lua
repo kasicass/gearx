@@ -1,3 +1,4 @@
+-- emacs: -*- lua-mode -*- TAB SIZE: 4 -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -18,8 +19,6 @@
 
 	$Id$
 	ChenZaichun@gmail.com
-
-	TAB SIZE: 4
 --]]
 
 -------------------------------------------------------------------------------
@@ -78,9 +77,9 @@ end
 -------------------------------------------------------------------------------
 -- remove all handler
 function MouseListener.RemoveAll ()
-	for v, t in pairs(MouseListener._listener) do
-		MouseListener._listener[v] = nil
-	end
+-- 	for v, t in pairs(MouseListener._listener) do
+-- 		MouseListener._listener[v] = nil
+-- 	end
 
---	MouseListener._listener = {}
+	MouseListener._listener = {}
 end

@@ -1,4 +1,4 @@
--- emacs: -*- lua-mode -*- TAB SIZE: 4 -*- 
+-- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -27,12 +27,13 @@ TriBlock = {}
 
 -------------------------------------------------------------------------------
 -- create moving block
+-- 
 function TriBlock.New ()
 	local self = {}
-	self._timer = Timer.New(100)
+	self._timer = Timer.New(30)
 	self._x = math.random(1, BLOCK_WIDTH) * BLOCK_SIZE
 	self._y = 0
-	self._dy = 1
+	self._dy = 4
 	
 	local i = math.random()
 	for i = 1, 3 do
@@ -47,6 +48,7 @@ end
 
 -------------------------------------------------------------------------------
 -- reset moving block
+-- 
 function TriBlock:Reset ()
 	self._x = math.random(0, BLOCK_WIDTH-1) * BLOCK_SIZE
 	self._y = 0
@@ -59,11 +61,20 @@ function TriBlock:Reset ()
 end
 
 -------------------------------------------------------------------------------
+-- set first block y coordinate
+-- 
+-- @param y y-axis coordinate
+-- 
+function TriBlock:SetY (y)
+	self._y = y
+end
+
+-------------------------------------------------------------------------------
 -- move triblock
-function TriBlock:Move ()
-	if (self._timer:IsActive()) then 
-		local s = self._y + self._dy
-		self._y = self._y -- + self._dy
+-- 
+function TriBlock:MoveDown ()
+	if self._timer:IsActive() then 
+		self._y = self._y + self._dy
 	end
 end
 
@@ -81,8 +92,9 @@ end
 
 -------------------------------------------------------------------------------
 -- scroll image
+-- 
 function TriBlock:ScrollUP ()
-	self[1], self[2], self[3] = self[2], self[1], self[3]
+	self[1], self[2], self[3] = self[2], self[3], self[1]
 end
 
 function TriBlock:ScrollDown ()
@@ -91,17 +103,18 @@ end
 
 -------------------------------------------------------------------------------
 -- get image index
+-- 
 function TriBlock:GetIdx (idx)
 	assert(idx >= 1 and idx <= 3, "out of boundary")
 	return self[idx]
 end
 
 function TriBlock:XIdx ()
-	return self._x / BLOCK_SIZE + 1
+	return math.floor(self._x / BLOCK_SIZE) + 1
 end
 
 function TriBlock:YIdx ()
-	return self._y / BLOCK_SIZE + 1
+	return math.floor(self._y / BLOCK_SIZE) + 1
 end
 
 -------------------------------------------------------------------------------

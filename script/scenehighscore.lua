@@ -1,3 +1,4 @@
+-- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -18,13 +19,12 @@
 
 	$Id: $
 	ChenZaichun@gmail.com
-
-	TAB SIZE: 4
 --]]
 
 -------------------------------------------------------------------------------
+dofile("../script/highscore.lua")
 
-
+-------------------------------------------------------------------------------
 SceneHighScore = {}
 
 local HIGHSCORE_PIC_PATH = "data/pic/highscore/"
@@ -58,6 +58,18 @@ function SceneHighScore:Draw (canvas)
 		self._change = false
 	else
 		canvas:UnChange()
+	end
+
+	for i=1, 10 do
+		local s
+		if (HIGH_SCORE[i]) then
+			s = string.format("%-2d.%16s%20d", i, HIGH_SCORE[i][1] or "",
+						  HIGH_SCORE[i][2] or 0)
+		else
+			s = string.format("%-2d.%16s%20d", i, "", 0)
+		end
+
+		font:Draw(canvas, s, 0xff, 250, 100+(i-1)*50)
 	end
 
 	self._bg:Draw(canvas, 0, 0, BLIT_STYLE.BLIT_COPY)

@@ -1,3 +1,4 @@
+-- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -18,13 +19,13 @@
 
 	$Id: $
 	ChenZaichun@gmail.com
-
-	TAB SIZE: 4
 --]]
 
 -------------------------------------------------------------------------------
 -- serialize objects
--- \return the result string
+-- 
+-- @return the result string
+-- 
 function serialize (o)
 	local str = ""
 	if type(o) == "number" then
@@ -48,5 +49,29 @@ function serialize (o)
 	return str
 end
 
+-------------------------------------------------------------------------------
+-- 
+function serializenoidx (o)
+	local str = ""
+	if (type(o) == "number") then
+		str = str .. o
+	elseif (type(o) == "string") then
+		str = str .. "\"" .. o .. "\""
+	elseif (type(o) == "boolean") then
+		str = str .. tostring(o)
+	elseif (type(o) == "table") then
+		str = str .. "{\n"
+		for i, v in ipairs(o) do
+			str = str .. "\t" .. serializenoidx(v)
+			str = str .. ",\n"
+		end
+
+		str = str .. "}\n"
+	else
+		error("can not serialize " .. type(o))
+	end
+
+	return str
+end
     
 

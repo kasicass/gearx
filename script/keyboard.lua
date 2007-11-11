@@ -1,3 +1,4 @@
+-- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -18,8 +19,6 @@
 
 	$Id$
 	ChenZaichun@gmail.com
-
-	TAB SIZE: 4
 --]]
 
 -------------------------------------------------------------------------------
@@ -106,15 +105,20 @@ end
 -------------------------------------------------------------------------------
 -- remove all key binding
 function KeyListener.RemoveAll ()
-	for v, t in pairs(KeyListener._listener) do
-		KeyListener._listener[v] = nil
-	end
-
 	KeyListener._listener = {}
 end
 
 -------------------------------------------------------------------------------
 function KeyListener.Check (key)
+	if (KeyListener._all) then
+		if (KeyListener._allfunc) then
+			_, ret = pcall(KeyListener._allfunc, key)
+			if (ret) then
+				return
+			end
+		end
+	end
+
 	local func = KeyListener._listener[key]
 	if (func) then
 		local noerr, msg = pcall(func)
@@ -127,8 +131,22 @@ function KeyListener.Check (key)
 end
 
 -------------------------------------------------------------------------------
+function KeyListener.RegistAll (func)
+	KeyListener._all = true
+	KeyListener._allfunc = func
+end
+
+-------------------------------------------------------------------------------
+function KeyListener.RemoveAllListener ()
+	KeyListener._all = false
+	KeyListener._allfunc = nil
+end
+
+-------------------------------------------------------------------------------
 -- test for is a specified key down?
--- \param key
+-- 
+-- @param key
+-- 
 function KeyListener.KeyDown (key)
 	if (type(x) ~= "number") then
 		key = key:upper()

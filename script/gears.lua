@@ -33,10 +33,6 @@ BLOCK_OFFSET_X = 280	     	-- start of the drawing area
 BLOCK_OFFSET_Y = 0				--
 
 -------------------------------------------------------------------------------
--- sparks and triblocks
-dofile("../script/spark.lua")
-
--------------------------------------------------------------------------------
 -- gear class 
 Gears = {}
 

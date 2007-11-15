@@ -23,14 +23,13 @@
 
 /**
  * @file   GXMain.cpp
- * @author  <ChenZaichun>
+ * @author ChenZaichun <ChenZaichun@gmail.com>
  * @date   Mon Nov 12 16:24:13 2007
  * 
  * @brief  
  * 
  * 
  */
-
 
 #include "GXInc.h"
 #include "GXFile.h"
@@ -59,6 +58,7 @@
  */
 LRESULT CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM);
 
+///////////////////////////////////////////////////////////////////////////////
 /** 
  * low part of  DWORD, called in lua
  * 
@@ -125,6 +125,7 @@ static int AAnd(lua_State* L)
 	return 1;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 /** 
  * quit application, called in Lua
  * 
@@ -148,20 +149,26 @@ static int Quit(lua_State* L)
 static int pmain (lua_State* L)
 {
 	luaL_openlibs(L);				/* open standard libraries */
-	
-	lua_pushcfunction(L, LoWord); // regist LOWORD 
+
+	// regist _DEBUG for lua script
+#if defined DEBUG || defined _DEBUG
+	lua_pushboolean(L, 1);
+	lua_setglobal(L, "_DEBUG");
+#endif
+		
+	lua_pushcfunction(L, LoWord);	// regist LOWORD 
 	lua_setglobal(L, "LOWORD");
 	
-	lua_pushcfunction(L, HiWord); // regist HIWORD
+	lua_pushcfunction(L, HiWord);	// regist HIWORD
 	lua_setglobal(L, "HIWORD");
 	
-	lua_pushcfunction(L, Quit);	// regist Quit
+	lua_pushcfunction(L, Quit);		// regist Quit
 	lua_setglobal(L, "Quit");
 
-	lua_pushcfunction(L, AOr);	// regist AOr
+	lua_pushcfunction(L, AOr);		// regist AOr
 	lua_setglobal(L, "AOr");
 
-	lua_pushcfunction(L, AAnd);	// regist AAnd
+	lua_pushcfunction(L, AAnd);		// regist AAnd
 	lua_setglobal(L, "AAnd");
 	
 	luaopen_GXFileLib(L);
@@ -276,11 +283,7 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,
 		printf("%s", lua_tostring(L, -1));
 		return 1;
 	}
-	//lua_getglobal(L, "GXMain");
-	//if (!lua_isfunction(L, -1)) {
-	//	fprintf(stderr, "GXMain not funciton\n");
-	//	return 1;
-	//}
+
 	ShowWindow (hwnd, nCmdShow) ;
 	UpdateWindow (hwnd);
 	for (;;) {
@@ -298,11 +301,6 @@ int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,
 		}
 	}
 	
-	//if (lua_pcall(L, 0, 0, 0)) {
-	//	char sz[1024];
-	//	sprintf(sz, "%s", lua_tostring(L, -1));
-	//	return 1;
-	//}
 	lua_getglobal(L, "GXExit");
 	if (lua_pcall(L, 0, 0, 0) != 0) {
 		printf("%s", lua_tostring(L, -1));
@@ -324,32 +322,6 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	int ret;
 	switch (message) {
-	//case WM_MOUSEMOVE:
-	//	lua_getglobal(L, "GXMouseMove");
-	//	lua_pushinteger(L, LOWORD(lParam));
-	//	lua_pushinteger(L, HIWORD(lParam));
-	//	if (lua_pcall(L, 2, 0, 0) != 0) {
-	//		printf("%s", lua_tostring(L, -1));
-	//		return 1;
-	//	}
-	//	return 0;
-	//case WM_KEYDOWN:
-	//	lua_getglobal(L, "GXKeyDown");
-	//	lua_pushinteger(L, wParam);
-	//	if (lua_pcall(L, 1, 0, 0) != 0) {
-	//		printf("%s", lua_tostring(L, -1));
-	//		return 1;
-	//	}
-	//	return 0;
-	//case WM_LBUTTONDOWN:
-	//	lua_getglobal(L, "GXLButtonDown");
-	//	lua_pushinteger(L, LOWORD(lParam));
-	//	lua_pushinteger(L, HIWORD(lParam));
-	//	if (lua_pcall(L, 2, 0, 0) != 0) {
-	//		printf("%s", lua_tostring(L, -1));
-	//		return 1;
-	//	}
-	//	return 0;
 	case WM_DESTROY:
 		PostQuitMessage(0) ;
 		return 0;
@@ -366,8 +338,10 @@ LRESULT CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		ret = lua_toboolean(L, -1);
 		if (ret) {
 			return 0;
-		}
-		else 
+		} else {
+			// not handle, so use default window handler
 			break;
-	}	return DefWindowProc (hwnd, message, wParam, lParam);
+		}
+	}	
+	return DefWindowProc (hwnd, message, wParam, lParam);
 }

@@ -175,7 +175,7 @@ static int pmain (lua_State* L)
 }
 
 /// main lua script file path
-#define MAIN_SCRIPT		"../script/GXMain.lua"
+#define MAIN_SCRIPT		"lua/GXMain.lua"
 
 /** 
  * create main window

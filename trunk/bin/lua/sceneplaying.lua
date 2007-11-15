@@ -25,11 +25,11 @@
 PLAYING_PIC_PATH = "data/pic/playing/"
 
 -------------------------------------------------------------------------------
-dofile("../script/score.lua")
-dofile("../script/gears.lua")
-dofile("../script/spark.lua")
-dofile("../script/triblock.lua")
-dofile("../script/block.lua")
+dofile("lua/score.lua")
+dofile("lua/gears.lua")
+dofile("lua/spark.lua")
+dofile("lua/triblock.lua")
+dofile("lua/block.lua")
 
 -------------------------------------------------------------------------------
 ScenePlaying = {}

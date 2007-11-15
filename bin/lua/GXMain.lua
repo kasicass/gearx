@@ -22,8 +22,6 @@
 --]]
 
 -------------------------------------------------------------------------------
---package.path = "../script/" .. package.path
-
 -- utilities
 require("Timer")
 require("Settings")
@@ -118,6 +116,7 @@ GameState._DRAWFUNC = {
 local g_canvas					-- canvas
 local g_surface					-- surface
 
+-------------------------------------------------------------------------------
 -- init function
 function GXInit (hwnd)
 	g_canvas = WCanvas.Create(800, 600)
@@ -127,6 +126,7 @@ function GXInit (hwnd)
 	Music.Init();
 end
 
+-------------------------------------------------------------------------------
 function GXMain ()
 	local ret
 	if (GameState._scene == nil) then
@@ -140,6 +140,7 @@ function GXMain ()
 	g_surface:Blit2Screen()
 end
 
+-------------------------------------------------------------------------------
 function GXMouseMove (x, y)
 	MouseListener.Check("MOUSEMOVE", x, y)
 end
@@ -148,10 +149,12 @@ function GXLButtonDown (x, y)
 	MouseListener.Check("LBUTTONDOWN", x, y)
 end
 
+-------------------------------------------------------------------------------
 function GXKeyDown (key)
 	KeyListener.Check(key)
 end
 
+-------------------------------------------------------------------------------
 function GXExit ()
 	SaveHighScore()
 	SaveSettings()
@@ -160,6 +163,7 @@ function GXExit ()
 	font = nil
 end
 
+-------------------------------------------------------------------------------
 -- wnd proc
 function WndProc (msg, wparam, lparam)
 	if (msg == WND_MSG.WM_KEYDOWN) then
@@ -174,4 +178,6 @@ function WndProc (msg, wparam, lparam)
 
 	return true
 end
+
+-------------------------------------------------------------------------------
 

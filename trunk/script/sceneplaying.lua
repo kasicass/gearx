@@ -366,7 +366,7 @@ end
 
 -------------------------------------------------------------------------------
 function ScenePlaying:Destroy ()
-	printf("ScenePlaying:Destroy")
+	print("ScenePlaying:Destroy")
 	self._bgm:UnLoad(Music.TYPE.STREAM)
 	self._bgm = nil
 	self._bg = nil

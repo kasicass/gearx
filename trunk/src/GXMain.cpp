@@ -21,6 +21,17 @@
     ChenZaichun@gmail.com
 */
 
+/**
+ * @file   GXMain.cpp
+ * @author  <ChenZaichun>
+ * @date   Mon Nov 12 16:24:13 2007
+ * 
+ * @brief  
+ * 
+ * 
+ */
+
+
 #include "GXInc.h"
 #include "GXFile.h"
 #include "GXBitmap.h"
@@ -216,6 +227,16 @@ HWND CreateMainWindow(HINSTANCE hInstance, char *lpCmdLine,int nCmdShow)
 
 lua_State *L;					// lua state pointer -- global
 
+/** 
+ * Windows Main entry
+ * 
+ * @param hInstance 		process instance
+ * @param hPrevInstance 	NULL
+ * @param lpCmdLine 		command line
+ * @param nCmdShow 			window show status
+ * 
+ * @return 
+ */
 int WINAPI WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,
 				   char *lpCmdLine,int nCmdShow)
 {

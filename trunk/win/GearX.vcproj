@@ -105,6 +105,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="fmodvc.lib"
 				OutputFile=".\../bin/GearX.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -191,6 +192,9 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
+				RelativePath="..\src\GearX.rc">
+			</File>
+			<File
 				RelativePath="..\src\GXBitmap.cpp">
 			</File>
 			<File
@@ -232,6 +236,12 @@
 			</File>
 			<File
 				RelativePath="..\src\GXTimer.h">
+			</File>
+			<File
+				RelativePath="..\src\resource.h">
+			</File>
+			<File
+				RelativePath=".\resource.h">
 			</File>
 		</Filter>
 		<Filter

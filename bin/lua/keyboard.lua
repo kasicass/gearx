@@ -126,7 +126,7 @@ function KeyListener.Check (key)
 			error("error to call key callback: " .. key .. " " .. msg)
 		end
 	else
-		printf("no key bind: " .. key)
+		print("no key bind: " .. key)
 	end
 end
 

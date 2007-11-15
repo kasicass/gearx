@@ -23,7 +23,7 @@
 
 -------------------------------------------------------------------------------
 -- file contain score infmation
-dofile("../script/highscore.lua")
+dofile("lua/highscore.lua")
 
 -------------------------------------------------------------------------------
 
@@ -89,7 +89,7 @@ end
 -- save high score
 -- 
 function SaveHighScore ()
-	local f = assert(io.open("../script/highscore.lua", "w"))
+	local f = assert(io.open("lua/highscore.lua", "w"))
 	local str = "HIGH_SCORE = " .. serializenoidx(HIGH_SCORE)
 	f:write(str)
 	f:close()

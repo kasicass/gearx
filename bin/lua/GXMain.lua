@@ -22,7 +22,7 @@
 --]]
 
 -------------------------------------------------------------------------------
-package.path = "../script/" .. package.path
+--package.path = "../script/" .. package.path
 
 -- utilities
 require("Timer")
@@ -33,10 +33,10 @@ require("Settings")
 --dofile("../script/button.lua")
 require("Button")
 --require("MouseListener")
-dofile("../script/mouse.lua")
-dofile("../script/keyboard.lua")
-dofile("../script/music.lua")
-dofile("../script/animation.lua")
+dofile("lua/mouse.lua")
+dofile("lua/keyboard.lua")
+dofile("lua/music.lua")
+dofile("lua/animation.lua")
 
 -------------------------------------------------------------------------------
 MAIN_PATH = "" -- "../data/"
@@ -88,12 +88,12 @@ function SetGameState (state)
 end
 
 -------------------------------------------------------------------------------
-dofile("../script/scenelogo.lua")
-dofile("../script/scenemainmenu.lua")
-dofile("../script/sceneplaying.lua")
-dofile("../script/sceneoption.lua")
-dofile("../script/scenehighscore.lua")
-dofile("../script/scenecredit.lua")
+dofile("lua/scenelogo.lua")
+dofile("lua/scenemainmenu.lua")
+dofile("lua/sceneplaying.lua")
+dofile("lua/sceneoption.lua")
+dofile("lua/scenehighscore.lua")
+dofile("lua/scenecredit.lua")
 
 GameState._INITFUNC = {
 	SceneLogo.Init,

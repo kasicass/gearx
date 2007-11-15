@@ -1,4 +1,4 @@
--- emacs: -*- lua-mode -*- TAB SIZE: 4 -*- 
+-- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -23,8 +23,8 @@
 
 -------------------------------------------------------------------------------
 -- require files
-dofile("../script/cfg.lua")
-dofile("../script/serialize.lua")
+dofile("lua/cfg.lua")
+dofile("lua/serialize.lua")
 
 -------------------------------------------------------------------------------
 -- return music setting
@@ -56,7 +56,7 @@ end
 -------------------------------------------------------------------------------
 -- save settings
 function SaveSettings ()
-	local f = assert(io.open("../script/cfg.lua", "w"))
+	local f = assert(io.open("lua/cfg.lua", "w"))
 	local str = "GAME_SETTING = " .. serialize(GAME_SETTING)
 	f:write(str)
 	f:close()

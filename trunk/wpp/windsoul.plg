@@ -1,0 +1,61 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: windsoul - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\CHENZA~1\LOCALS~1\Temp\RSP1BE.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /I "../include" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "_MSVC" /D "WINDSOUL_EXPORTS" /FR"Debug/" /Fp"Debug/windsoul.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"E:\wpp\wpp16\WSAPP\WSAPP.CPP"
+"E:\wpp\wpp16\WSAPP\WSWND.CPP"
+]
+Creating command line "cl.exe @C:\DOCUME~1\CHENZA~1\LOCALS~1\Temp\RSP1BE.tmp" 
+Creating temporary file "C:\DOCUME~1\CHENZA~1\LOCALS~1\Temp\RSP1BF.tmp" with contents
+[
+ddraw.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /base:"0x11000000" /dll /incremental:yes /pdb:"../lib/wsdebug.pdb" /debug /machine:I386 /out:"../dll/wsdebug.dll" /implib:"../lib/wsdebug.lib" 
+.\Debug\wsapp.obj
+.\Debug\wsmap.obj
+.\Debug\wswnd.obj
+.\Debug\achannel.obj
+.\Debug\CANVAS.OBJ
+.\Debug\font.obj
+.\Debug\geometry.obj
+.\Debug\timer.obj
+.\Debug\wstring.obj
+.\Debug\wsurface.obj
+.\Debug\bitmap.obj
+.\Debug\blit.obj
+.\Debug\datafile.obj
+.\Debug\gdi.obj
+.\Debug\memory.obj
+.\Debug\object.obj
+.\Debug\readbmp.obj
+.\Debug\readtga.obj
+.\Debug\text.obj
+.\Debug\windsoul.res
+.\Debug\alpha16.obj
+.\Debug\blit16.obj
+.\Debug\box16.obj
+.\Debug\font16.obj
+.\Debug\string.obj
+.\Debug\surface.obj
+.\Debug\text16.obj
+]
+Creating command line "link.exe @C:\DOCUME~1\CHENZA~1\LOCALS~1\Temp\RSP1BF.tmp"
+<h3>Output Window</h3>
+Compiling...
+WSAPP.CPP
+WSWND.CPP
+Linking...
+   Creating library ../lib/wsdebug.lib and object ../lib/wsdebug.exp
+
+
+
+<h3>Results</h3>
+wsdebug.dll - 0 error(s), 0 warning(s)
+</pre>
+</body>
+</html>

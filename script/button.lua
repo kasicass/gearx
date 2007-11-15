@@ -1,4 +1,4 @@
--- emacs: -*- lua-mode -*- TAB SIZE: 4 -*- 
+-- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -22,20 +22,23 @@
 --]]
 
 -------------------------------------------------------------------------------
-
+--module("button", package.seeall)
 
 -- Button class
 Button = {}
 
 ----------------------------------------------------------------------------
 -- create a button
--- \param pkgname: wdf file name for container the bitmap
--- \param filename: filename of the bitmap
--- \param frames: total frames of the bitmap
--- \param vertical: is the frames vertically?
--- \param x: x coordinate
--- \param y: y coordinate
--- \return the created button
+-- 
+-- @param pkgname wdf file name for container the bitmap
+-- @param filename filename of the bitmap
+-- @param frames total frames of the bitmap
+-- @param vertical is the frames vertically?
+-- @param x x coordinate
+-- @param y y coordinate
+-- 
+-- @return the created button
+-- 
 function Button.New(pkgname, filename, frames, vertical, x, y)
 	local self = {
 		_frames = frames or 2,
@@ -72,9 +75,10 @@ end
 
 -------------------------------------------------------------------------------
 -- set the button postion
--- \param self: button position to be changed
--- \param x: x coordinate
--- \param y: y coordinate
+-- 
+-- @param self button position to be changed
+-- @param x x coordinate
+-- @param y y coordinate
 function Button:SetPos(x, y)
 	self._x = x
 	self._y = y
@@ -82,8 +86,9 @@ end
 
 -------------------------------------------------------------------------------
 -- button Draw function
--- \param self: button to be drawn
--- \param canvas: canvas which the button will be drawn on
+-- 
+-- @param self button to be drawn
+-- @param canvas canvas which the button will be drawn on
 function Button:Draw(canvas)
 	if (self._laststate ~= self._state) then
 		canvas:Change()
@@ -97,18 +102,20 @@ end
 
 -------------------------------------------------------------------------------
 -- change the status of the button
--- \param self: button 
--- \param state: new state of the button
+-- 
+-- @param self button 
+-- @param state new state of the button
 function Button:StatusChange (state)
 	self._state = state
 end
 
 -------------------------------------------------------------------------------
 -- mouse move message handler of button, the function is to handle
--- the mouse hover message
--- \param self: button
--- \param x: x coordinate of the mouse
--- \param y: y coordinate of the mouse
+-- 		the mouse hover message
+-- 
+-- @param self button
+-- @param x x coordinate of the mouse
+-- @param y y coordinate of the mouse
 function Button:IsCover(x, y)
 	local cover = (self[self._state]:IsCover(x-self._x, y-self._y) ~= 0)
 	if (cover) then
@@ -119,6 +126,9 @@ function Button:IsCover(x, y)
 	
 	return cover
 end
+
+-------------------------------------------------------------------------------
+
 
 
 

@@ -1,14 +1,42 @@
+/*  emacs: -*- mode: cc; coding: gb2312 -*- TAB SIZE: 4 -*-  */
 
-/*!
-* $Id$
-*
-* \brief	fmod LuaBind
+/*
+    Copyright (C) 2007 GearX Team
+
+    This source code is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    This source code is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+    $Id$
+    ChenZaichun@gmail.com
 */
+
+/**
+ * @file   GXMusic.cpp
+ * @author ChenZaichun
+ * @date   Mon Nov 12 16:35:13 2007
+ * 
+ * @brief  fmod lua bind
+ * 
+ * 		   封装了读取wdf包内声音文件，并暴露接口使之能够在Lua中使用
+ */
+
 
 #include "GXMusic.h"
 #include "fmod.h"
 
 //////////////////////////////////////////////////////////////////////////
+// prototypes
 void* F_CALLBACKAPI MusicOpen(const char *name);
 void  F_CALLBACKAPI MusicClose(void *handle);
 int	  F_CALLBACKAPI MusicRead(void *buffer, int size, void *handle);
@@ -16,6 +44,13 @@ int   F_CALLBACKAPI MusicSeek(void *handle, int pos, signed char mode);
 int   F_CALLBACKAPI MusicTell(void *handle);
 
 //////////////////////////////////////////////////////////////////////////
+/** 
+ * wrapper of fopen for reading wdf package 
+ * 
+ * @param name file name
+ * 
+ * @return file handle
+ */
 void* F_CALLBACKAPI MusicOpen(const char *name)
 {
 	int id = WString2ID(name);
@@ -24,6 +59,13 @@ void* F_CALLBACKAPI MusicOpen(const char *name)
 	return (void*)(file);
 }
 
+/** 
+ * 
+ * 
+ * @param handle 
+ * 
+ * @return 
+ */
 void  F_CALLBACKAPI MusicClose(void *handle)
 {
 	WFile* file = (WFile*)handle;

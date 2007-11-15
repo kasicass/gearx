@@ -22,11 +22,17 @@
 --]]
 
 -------------------------------------------------------------------------------
+package.path = "../script/" .. package.path
+
 -- utilities
-dofile("../script/timer.lua")
-dofile("../script/utility.lua")
-dofile("../script/settings.lua")
-dofile("../script/button.lua")
+require("Timer")
+require("Settings")
+--dofile("../script/timer.lua")
+--dofile("../script/utility.lua")
+--dofile("../script/settings.lua")
+--dofile("../script/button.lua")
+require("Button")
+--require("MouseListener")
 dofile("../script/mouse.lua")
 dofile("../script/keyboard.lua")
 dofile("../script/music.lua")
@@ -75,7 +81,7 @@ GameState = {
 }
 
 function SetGameState (state)
-	printf("state change")
+	print("state change")
 	GameState._state = state
 	GameState._scene:Destroy()
 	GameState._scene = nil
@@ -125,8 +131,8 @@ function GXMain ()
 	local ret
 	if (GameState._scene == nil) then
 		ret, GameState._scene = pcall(GameState._INITFUNC[GameState._state])
-		printf("change scene")
-		printf("current state is %d", GameState._state)
+		print("change scene")
+		print("current state is: ", GameState._state)
 	end
 	
 	ret = pcall(GameState._DRAWFUNC[GameState._state], GameState._scene, g_canvas)

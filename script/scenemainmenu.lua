@@ -137,7 +137,7 @@ end
 function SceneMainMenu:Destroy ()
 	MouseListener.RemoveAll()
 	KeyListener.RemoveAll()
-	printf("SceneMainMenu:Destory")
+	print("SceneMainMenu:Destory")
 	self._bgm:UnLoad(Music.TYPE.STREAM)
 	self._btn_hover:UnLoad(Music.TYPE.SAMPLE)
 	for v, t in pairs(self) do

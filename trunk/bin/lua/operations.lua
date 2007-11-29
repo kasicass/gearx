@@ -17,18 +17,35 @@
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-	$Id$
+	$Id: $
 	ChenZaichun@gmail.com
 --]]
 
 -------------------------------------------------------------------------------
 
-module("utility", package.seeall)
+-- operation of gearx
+operations = {
+	-- client to server
+	MOVELEFT = 1,
+	MOVERIGHT = 2,
+	UPSCROLLIMG = 3,
+	DOWNSCROLLIMG = 4,
+	MOVEDOWN = 5,
+	EXIT = 6,
 
-function printf(fmt, ...)
-    print(fmt:format(...))
-end
+	-- both server and client receive this message
+	START = 7,
+
+	-- server to client
+	UPDATE = 8,
+	OVER = 9,
+}
 
 -------------------------------------------------------------------------------
-_G[cprintf] = printf
-_G[printf] = print
+-- playing scene state
+PLAYING_STATE = {
+	INIT = 1,
+	PLAYING = 2,
+	PAUSE = 3,
+	OVER = 4,
+}

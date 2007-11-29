@@ -24,7 +24,7 @@
 				AdditionalIncludeDirectories="../include/wpp,../include/fmod,../lua51"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile="$(IntDir)/GearX.pch"
 				AssemblerListingLocation=""
@@ -91,7 +91,7 @@
 				AdditionalIncludeDirectories="../include/wpp,../include/fmod,../lua51"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="TRUE"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="0"
 				PrecompiledHeaderFile="$(IntDir)/GearX.pch"
@@ -147,101 +147,20 @@
 	</References>
 	<Files>
 		<Filter
-			Name="COMMON"
-			Filter="*.h;*.c;*.hpp;*.cpp;*.cc">
-			<File
-				RelativePath="..\src\Binder.cpp">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\src\Binder.h">
-			</File>
-			<File
-				RelativePath="..\src\GXFile.cpp">
-			</File>
-			<File
-				RelativePath="..\src\GXFile.h">
-			</File>
-			<File
-				RelativePath="..\src\GXInc.h">
-			</File>
-			<File
-				RelativePath="..\src\GXLua.hpp">
-			</File>
-			<File
-				RelativePath="..\src\GXUtils.h">
-			</File>
-		</Filter>
-		<Filter
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat">
 			<File
 				RelativePath="..\src\GearX.rc">
 			</File>
 			<File
-				RelativePath="..\src\GXBitmap.cpp">
-			</File>
-			<File
-				RelativePath="..\src\GXCanvas.cpp">
-			</File>
-			<File
-				RelativePath="..\src\GXFont.cpp">
-			</File>
-			<File
 				RelativePath="..\src\GXMain.cpp">
-			</File>
-			<File
-				RelativePath="..\src\GXMusic.cpp">
-			</File>
-			<File
-				RelativePath="..\src\GXSurface.cpp">
-			</File>
-			<File
-				RelativePath="..\src\GXTimer.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
-				RelativePath="..\src\GXBitmap.h">
-			</File>
-			<File
-				RelativePath="..\src\GXCanvas.h">
-			</File>
-			<File
-				RelativePath="..\src\GXFont.h">
-			</File>
-			<File
-				RelativePath="..\src\GXMusic.h">
-			</File>
-			<File
-				RelativePath="..\src\GXSurface.h">
-			</File>
-			<File
-				RelativePath="..\src\GXTimer.h">
-			</File>
-			<File
 				RelativePath=".\resource.h">
-			</File>
-			<File
-				RelativePath="..\src\resource.h">
 			</File>
 		</Filter>
 		<Filter

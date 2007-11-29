@@ -1,8 +1,34 @@
+/*  emacs: -*- mode: c; coding: utf-8; -*-  */
 
-/*!
- * $Id$
- *
- * \brief	对于WFile的luabind，lua中使用
+/*
+    Copyright (C) 2007 GearX Team
+
+    This source code is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    This source code is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+    $Id$
+    ChenZaichun@gmail.com
+*/
+
+/**
+ * @file   GXFile.h
+ * @author ChenZaichun <ChenZaichun@gmail.com>
+ * @date   Sun Nov 25 17:28:30 2007
+ * 
+ * @brief  WFile for lua
+ * 
+ * 
  */
 
 #ifndef _GX_FILE_H
@@ -11,7 +37,7 @@
 #include "GXInc.h"
 
 /*!
- * 注册File函数，可供使用的有:
+ * registed functions:
  *
  *		OpenDataFile(const char* packagename)	/// open wdf package
  *		Load(const char *filename)				/// read the whole file to memory
@@ -24,15 +50,15 @@
  *		Close()									/// close the file for read
  *		IsEnd()	
  *
- * Lua代码:
+ * Lua code example:
  *		local f = File.OpenDataFile("data.wdf")
  *		File.Load(f, "mainmenu.bmp")
  *		local data = File.Data(f)
  *		Bitmap.Load(data)
  *		...				-- automatic release by _gc, so you don't need to call Close
- * 
- * 调用Close之后，对象将被销毁
+ *
  */
+extern "C"
 int luaopen_GXFileLib(lua_State* L);
 
 #endif

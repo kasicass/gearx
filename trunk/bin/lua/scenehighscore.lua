@@ -1,4 +1,4 @@
--- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
+-- emacs: -*- mode: lua; coding: utf-8; -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -22,37 +22,37 @@
 --]]
 
 -------------------------------------------------------------------------------
-dofile("lua/highscore.lua")
+require("highscore")
 
 -------------------------------------------------------------------------------
-SceneHighScore = {}
+scenehighscore = {}
 
 local HIGHSCORE_PIC_PATH = "data/pic/highscore/"
 
 -------------------------------------------------------------------------------
-function SceneHighScore.Init ()
+function scenehighscore.init ()
 	local self = {}
 
 	self._bg = WBitmap.Load(MAIN_RES_PKG,
 							HIGHSCORE_PIC_PATH .. "background.bmp")
 
-	KeyListener.Regist("ESC", function ()
-								  pcall(SetGameState, GAME_STATES.MAINMENU)
+	keyboard.regist("ESC", function ()
+								  pcall(setgamestate, GAME_STATES.MAINMENU)
 							  end)
 
 	self._change = true
-	setmetatable(self, {__index = SceneHighScore})
+	setmetatable(self, {__index = scenehighscore})
 
 	return self
 end
 
 -------------------------------------------------------------------------------
-function SceneHighScore:Destroy()
-	KeyListener.RemoveAll()
+function scenehighscore:destroy()
+	keyboard.removeall()
 end
 
 -------------------------------------------------------------------------------
-function SceneHighScore:Draw (canvas)
+function scenehighscore:draw (canvas)
 	if (self._change) then
 		canvas:Change()
 		self._change = false
@@ -62,9 +62,9 @@ function SceneHighScore:Draw (canvas)
 
 	for i=1, 10 do
 		local s
-		if (HIGH_SCORE[i]) then
-			s = string.format("%-2d.%16s%20d", i, HIGH_SCORE[i][1] or "",
-						  HIGH_SCORE[i][2] or 0)
+		if (highscore[i]) then
+			s = string.format("%-2d.%16s%20d", i, highscore[i][1] or "",
+						  highscore[i][2] or 0)
 		else
 			s = string.format("%-2d.%16s%20d", i, "", 0)
 		end

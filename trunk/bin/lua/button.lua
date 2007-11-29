@@ -1,4 +1,4 @@
--- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
+-- emacs: -*- mode: lua; coding: utf-8; -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -25,7 +25,7 @@
 --module("button", package.seeall)
 
 -- Button class
-Button = {}
+button = {}
 
 ----------------------------------------------------------------------------
 -- create a button
@@ -39,7 +39,7 @@ Button = {}
 -- 
 -- @return the created button
 -- 
-function Button.New(pkgname, filename, frames, vertical, x, y)
+function button.new(pkgname, filename, frames, vertical, x, y)
 	local self = {
 		_frames = frames or 2,
 		_x = x or 0,
@@ -68,7 +68,7 @@ function Button.New(pkgname, filename, frames, vertical, x, y)
 					(i-1)*y_delta, w, h)
 	end
 
-	setmetatable(self, {__index = Button})
+	setmetatable(self, {__index = button})
 	
 	return self
 end
@@ -78,8 +78,9 @@ end
 -- 
 -- @param self button position to be changed
 -- @param x x coordinate
--- @param y y coordinate
-function Button:SetPos(x, y)
+-- @param y y coordinate326")-- 
+function button:setpos(x, y)
+	print("34256")
 	self._x = x
 	self._y = y
 end
@@ -89,7 +90,8 @@ end
 -- 
 -- @param self button to be drawn
 -- @param canvas canvas which the button will be drawn on
-function Button:Draw(canvas)
+-- 
+function button:draw(canvas)
 	if (self._laststate ~= self._state) then
 		canvas:Change()
 		self._laststate = self._state
@@ -97,15 +99,16 @@ function Button:Draw(canvas)
 		canvas:UnChange()
 	end
 
+	-- call bitmap draw
 	self[self._state]:Draw(canvas, self._x, self._y, BLIT_STYLE.BLIT_MASK)
 end
 
 -------------------------------------------------------------------------------
 -- change the status of the button
 -- 
--- @param self button 
+-- @param self buttonr 
 -- @param state new state of the button
-function Button:StatusChange (state)
+function button:statuschange (state)
 	self._state = state
 end
 
@@ -116,7 +119,9 @@ end
 -- @param self button
 -- @param x x coordinate of the mouse
 -- @param y y coordinate of the mouse
-function Button:IsCover(x, y)
+-- 
+function button:iscover(x, y)
+	-- call bitmap IsCover
 	local cover = (self[self._state]:IsCover(x-self._x, y-self._y) ~= 0)
 	if (cover) then
 		self._state = 2

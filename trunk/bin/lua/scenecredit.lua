@@ -1,4 +1,4 @@
--- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
+-- emacs: -*- mode: lua; coding: utf-8; -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -22,31 +22,31 @@
 --]]
 
 -------------------------------------------------------------------------------
+require("keyboard")
 
-
-SceneCredit = {}
+scenecredit = {}
 
 local CREDIT_PIC_PATH = "data/pic/credits/"
 
 -------------------------------------------------------------------------------
-function SceneCredit.Init()
+function scenecredit.init()
 	local self = {}
 	self._bg = WBitmap.Load(MAIN_RES_PKG,
 							CREDIT_PIC_PATH .. "background.bmp")
 
 	self._change = true
 
-	KeyListener.Regist("ESC", function ()
-								  pcall(SetGameState, GAME_STATES.MAINMENU)
+	keyboard.regist("ESC", function ()
+								  pcall(setgamestate, GAME_STATES.MAINMENU)
 							  end)
 
-	setmetatable(self, {__index = SceneCredit})
+	setmetatable(self, {__index = scenecredit})
 
 	return self
 end
 
 -------------------------------------------------------------------------------
-function SceneCredit:Draw(canvas)
+function scenecredit:draw(canvas)
 	if (self._change) then
 		canvas:Change()
 		self._change = false
@@ -58,6 +58,6 @@ function SceneCredit:Draw(canvas)
 end
 
 -------------------------------------------------------------------------------
-function SceneCredit:Destroy ()
-	KeyListener.RemoveAll()
+function scenecredit:destroy ()
+	keyboard.removeall()
 end

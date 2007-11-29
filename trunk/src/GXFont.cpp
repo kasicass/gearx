@@ -1,23 +1,48 @@
+//  emacs: -*- mode: c++; coding: utf-8; -*-
 
-/*!
- * \file	GXFont.cpp
- * \brief	WFont lua bind
- *
- * $Id: $
- *
- * CopyRight (c) GearX Team, 2007
- * See LISENCE for more information
+/*
+    Copyright (C) 2007 GearX Team
+
+    This source code is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    This source code is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+    $Id: $
+    ChenZaichun@gmail.com
+*/
+
+/**
+ * @file   GXFont.cpp
+ * @author ChenZaichun <ChenZaichun@gmail.com>
+ * @date   Mon Nov 26 15:42:32 2007
+ * 
+ * @brief  WFont Lua bind
+ * 
  */
 
 #include "GXFont.h"
 
-// for storing font information
+///////////////////////////////////////////////////////////////////////////////
+/// storing WFont pointer and HFONT,
+/// for release memory
 typedef struct GXFontData
 {
 	WFont*	wfont;
 	HFONT	hfont;
 } GXFontData, *PGXFontData;
 
+///////////////////////////////////////////////////////////////////////////////
+/// list struct for storing font info
 typedef struct FontList {
 	GXFontData data;
 	FontList* next;
@@ -25,7 +50,14 @@ typedef struct FontList {
 
 FontList * plist = NULL;
 
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXFont_Create(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -68,6 +100,13 @@ static int GXFont_Create(lua_State* L)
 	return 1;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXFont_Destroy(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -96,18 +135,13 @@ static int GXFont_Destroy(lua_State* L)
 	return 0;
 }
 
-/*
-static int GXFont_SetAlpha(lua_State* L)
-{
-	LuaBinder binder(L);
-	WFont* font = (WFont*)(binder.checkusertype(1, GXFONT_CLASSNAME));
-	int alpha = (int)(binder.checknumber(2));
-
-	font->SetUserData(alpha);
-	return 0;
-}
-*/
-
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXFont_Draw(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -125,14 +159,22 @@ static int GXFont_Draw(lua_State* L)
 }
 
 //////////////////////////////////////////////////////////////////////////
+/// 
 static const luaL_reg GXFontLib[] = {
 	{"Create",			GXFont_Create},
-//	{"SetAlpha",		GXFont_SetAlpha},
 	{"Draw",			GXFont_Draw},
 	{NULL,				NULL},
 };
 
 //////////////////////////////////////////////////////////////////////////
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
+extern "C"
 int luaopen_FontLib(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -140,4 +182,7 @@ int luaopen_FontLib(lua_State* L)
 
 	return 1;
 }
+
+///////////////////////////////////////////////////////////////////////////////
+// end of GXFont.cpp
 

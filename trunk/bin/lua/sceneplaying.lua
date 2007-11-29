@@ -1,4 +1,4 @@
--- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
+-- emacs: -*- mode: lua; coding: utf-8; -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -22,39 +22,41 @@
 --]]
 
 -------------------------------------------------------------------------------
+package.cpath = "../" .. package.cpath
+
 PLAYING_PIC_PATH = "data/pic/playing/"
 
--------------------------------------------------------------------------------
-dofile("lua/score.lua")
-dofile("lua/gears.lua")
-dofile("lua/spark.lua")
-dofile("lua/triblock.lua")
-dofile("lua/block.lua")
+local DEFAULT_SERVER_PORT = 5158
 
 -------------------------------------------------------------------------------
-ScenePlaying = {}
+require("score")
+require("gears")
+require("sparksys")
+require("triblock")
+require("block")
+require("mouse")
+require("keyboard")
+require("blocktable")
+require("socket")
+require("sparkimg")
+require("operations")
 
--- playing scene state
-PLAYING_STATE = {
-	INIT = 1,
-	PLAYING = 2,
-	PAUSE = 3,
-	OVER = 4,
-}
+-------------------------------------------------------------------------------
+sceneplaying = {}
 
 -- tasks
 local PLAYING_TASKS = {}
 
 -------------------------------------------------------------------------------
 -- to start
-function ScenePlaying:ToStart (canvas)
+function sceneplaying:tostart (canvas)
 	self._tostart = WBitmap.Load(MAIN_RES_PKG,
 								 PLAYING_PIC_PATH .. "to_start.bmp")
-	KeyListener.Regist("SPACE", function ()
-									self._state = PLAYING_STATE.PLAYING
-									coroutine.resume(PLAYING_TASKS._tostart,
-													 canvas)
-								end)
+	keyboard.regist("SPACE", function ()
+								 self._state = PLAYING_STATE.PLAYING
+								 coroutine.resume(PLAYING_TASKS._tostart,
+												  canvas)
+							 end)
 
 
 	coroutine.yield()
@@ -67,21 +69,21 @@ function ScenePlaying:ToStart (canvas)
 		canvas = coroutine.yield()
 	end
 
-	KeyListener.Remove("SPACE")
+	keyboard.remove("SPACE")
 	self._tostart = nil
 end
 
 -- playing
-function ScenePlaying:Playing (canvas)
+function sceneplaying:playing (canvas)
 
 	local function releaseRes()
 		print("playing release")
-		KeyListener.Remove("UP")
-		KeyListener.Remove("DOWN")
-		KeyListener.Remove("LEFT")
-		KeyListener.Remove("RIGHT")
-		KeyListener.Remove("P")
-		KeyListener.Remove("SPACE")
+		keyboard.remove("UP")
+		keyboard.remove("DOWN")
+		keyboard.remove("LEFT")
+		keyboard.remove("RIGHT")
+		keyboard.remove("P")
+		keyboard.remove("SPACE")
 
 		self._gears = nil
 		self._blocks = nil
@@ -89,185 +91,232 @@ function ScenePlaying:Playing (canvas)
 		self._sparksys = nil
 	end
 	
-	self._gears = Gears.Init()
- 	self._blocks = BlockTable.Init()
- 	self._triblock = TriBlock.New()
-	self._sparksys = SparkSystem.Init()
-	self._scatterlist = ScatteredBlocks.Init()
+	self._gears = gears.init()
+ 	self._blocks = blocktable.init()
+ 	self._triblock = triblock.new()
+	self._sparksys = sparksys.init()
+	self._sparkimg = sparkimg.init()
+	self._scatterlist = scatteredblocks.init()
 	self._score = 0
 
-	KeyListener.Regist ("ESC", function () 
-								   releaseRes()
-								   pcall(SetGameState, GAME_STATES.MAINMENU)
+	keyboard.regist ("ESC", function () 
+								local op = "" .. operations.EXIT
+								t_socket.senddata(self._t_socket, op, #op)
+								socket.send(self._t_socket)
+								releaseRes()
+								pcall(setgamestate, GAME_STATES.MAINMENU)
 							   end)
 
-	KeyListener.Regist("UP", function ()
+	keyboard.regist("UP", function ()
 								 if self._state ~= PLAYING_STATE.PLAYING then
 									 return
 								 end
 
-								 self._triblock:ScrollUP()
+								 local op = "" .. operations.UPSCROLLIMG
+								 t_socket.senddata(self._t_socket, op, #op)
+								 socket.send(self._t_socket)
 							 end)
-	KeyListener.Regist("DOWN", function ()
+	keyboard.regist("DOWN", function ()
+								if self._state ~= PLAYING_STATE.PLAYING then
+									return
+								end
+
+								local op = "" .. operations.DOWNSCROLLIMG
+								t_socket.senddata(self._t_socket, op, #op)
+								socket.send(self._t_socket)
+							end)
+	keyboard.regist("LEFT", function ()
+								if self._state ~= PLAYING_STATE.PLAYING then
+									return
+								end
+
+								local op = "" .. operations.MOVELEFT
+								t_socket.senddata(self._t_socket, op, #op)
+								socket.send(self._t_socket)
+							end)
+	keyboard.regist("RIGHT", function ()
 								 if self._state ~= PLAYING_STATE.PLAYING then
 									 return
 								 end
 
-								   self._triblock:ScrollDown()
-							   end)
-	KeyListener.Regist("LEFT", function ()
-								 if self._state ~= PLAYING_STATE.PLAYING then
-									 return
-								 end
-
-								   local x = self._triblock:XIdx() - 1
-								   local y = self._triblock:YIdx() + 1
-								   if (self._blocks:GetImgIdx(x, y) == 0) then
-									   self._triblock:MoveLeft()
-								   end
-							   end)
-	KeyListener.Regist("RIGHT", function ()
-								 if self._state ~= PLAYING_STATE.PLAYING then
-									 return
-								 end
-
-									local x = self._triblock:XIdx() + 1
-									local y = self._triblock:YIdx() + 1
-									if (self._blocks:GetImgIdx(x, y) == 0) then
-										self._triblock:MoveRight()
-									end
-								end)
-	KeyListener.Regist("P", function () 
+								 local op = "" .. operations.MOVERIGHT
+								 t_socket.senddata(self._t_socket, op, #op)
+								 socket.send(self._t_socket)
+							 end)
+	keyboard.regist("P", function () 
 								if (self._state == PLAYING_STATE.PLAYING) then
 									self._state = PLAYING_STATE.PAUSE
 								elseif (self._state == PLAYING_STATE.PAUSE) then
 									self._state = PLAYING_STATE.PLAYING
 								end
 							end)
-	KeyListener.Regist("SPACE", function ()
-									if self._state ~= PLAYING_STATE.PLAYING then
-										return
-									end
+	keyboard.regist("SPACE", function ()
+								 if self._state ~= PLAYING_STATE.PLAYING then
+									 return
+								 end
 									
-									if (self._scatterlist:GetCount() > 0) then
-										return
-									end
-									
-									local cx = self._triblock:XIdx()
-									local cy = BLOCK_HEIGHT
-									while (cy > 3) do
-										if (self._blocks:GetImgIdx(cx, cy) == 0) then
-											break
-										end
+								 if (self._scatterlist:getcount() > 0) then
+									 return
+								 end
 
-										cy = cy - 1
-									end
-
-									self._triblock:SetY((cy*BLOCK_SIZE-4))
-								end)
+								 local op = "" .. operations.MOVEDOWN
+								 t_socket.senddata(self._t_socket, op, #op)
+								 socket.send(self._t_socket)									
+							 end)
 
 	coroutine.yield()
 
-	while (self._state ~= PLAYING_STATE.OVER) do
-		local count = self._scatterlist:GetCount()
+	while (true) do
+		local op = "" .. operations.UPDATE
+		t_socket.senddata(self._t_socket, op, #op)
+		socket.send(self._t_socket)	
+		socket.recv(self._t_socket)
+		local retdata = t_socket.recvdata(self._t_socket)
+		-- process recv data
+		local iend, _s
+
+		-- state
+		_, iend, _s = string.find(retdata, "^(%d+)")
+		self._state = tonumber(_s)
+		if (self._state == PLAYING_STATE.OVER) then
+			break
+		end
+		
+		-- score
+		retdata = string.sub(retdata, iend+2)
+		_, iend, _s = string.find(retdata, "^(%d+)")
+		self._score = tonumber(_s)
+		
+		retdata = string.sub(retdata, iend+2)
+
+		-- triblock
+		-- x
+		_, iend, _s = string.find(retdata, "^(%d+)")
+		self._triblock._x = tonumber(_s)
+--		print(self._triblock._x)
+		retdata = string.sub(retdata, iend+2)
+
+		-- y
+		_, iend, _s = string.find(retdata, "^(%d+)")
+		self._triblock._y = tonumber(_s)
+		retdata = string.sub(retdata, iend+2)
+
+		-- img[1]
+		_, iend, _s = string.find(retdata, "^(%d+)")
+		self._triblock:setimgidx(1, tonumber(_s))
+		retdata = string.sub(retdata, iend+2)
+
+		-- img[2]
+		_, iend, _s = string.find(retdata, "^(%d+)")
+		self._triblock:setimgidx(2, tonumber(_s))
+		retdata = string.sub(retdata, iend+2)
+
+		-- img[3]
+		_, iend, _s = string.find(retdata, "^(%d+)")
+		self._triblock:setimgidx(3, tonumber(_s))
+		retdata = string.sub(retdata, iend+2)
+
+		for i = 1, BLOCK_WIDTH do
+			for j = 1, BLOCK_HEIGHT do
+				_, iend, _s = string.find(retdata, "^(%d+)")
+				self._blocks[i][j] = tonumber(_s)
+		
+				retdata = string.sub(retdata, iend+2)
+			end
+		end
+
+		_, iend, _s = string.find(retdata, "^(%d+)")
+		local count = tonumber(_s)
+		
+		retdata = string.sub(retdata, iend+2)		
+		self._scatterlist:reset()
+		for i = 1, count do
+			local x , y, idx
+			_, iend, _s = string.find(retdata, "^(%d+)")
+			retdata = string.sub(retdata, iend+2)
+			x = tonumber(_s)
+			_, iend, _s = string.find(retdata, "^(%d+)")
+			retdata = string.sub(retdata, iend+2)
+			y = tonumber(_s)
+			_, iend, _s = string.find(retdata, "^(%d+)")
+			retdata = string.sub(retdata, iend+2)
+			idx = tonumber(_s)
+			self._scatterlist:add(block.new(x, y, idx))
+		end
+
+		_, iend, _s = string.find(retdata, "^(%d+)")
+		count = tonumber(_s)
+		retdata = string.sub(retdata, iend+2)		
+		self._sparksys:reset()
+
+		for i = 1, count do
+			local x , y, idx
+			_, iend, _s = string.find(retdata, "^(%d+)")
+			retdata = string.sub(retdata, iend+2)
+			x = tonumber(_s)
+			_, iend, _s = string.find(retdata, "^(%d+)")
+			retdata = string.sub(retdata, iend+2)
+			y = tonumber(_s)
+			_, iend, _s = string.find(retdata, "^(%d+)")
+			retdata = string.sub(retdata, iend+2)
+			idx = tonumber(_s)
+			self._sparksys:add(x, y, idx)
+		end
+
+		local count = self._scatterlist:getcount()
 		if (count > 0) then
 			-- scattered list
 			local tbl = self._scatterlist
-			tbl:Move()
-	
-			if (math.fmod(tbl[1]._y, BLOCK_SIZE) == 0) then
-				self._blocks:ResetTrunkTbl()
-				
-				local i = 1
-				while (i <= count) do
-					local cx = math.floor(tbl[i]._x / BLOCK_SIZE) + 1
-					local cy = math.floor(tbl[i]._y / BLOCK_SIZE) + 1
-
-					if (cy >= BLOCK_HEIGHT or self._blocks[cx][cy+1] ~= 0) then
-						self._blocks:Add(cx, cy, tbl[i]._imgidx)
-						self._blocks:FillTrunkTbl(cx, cy)
-						table.remove(tbl, i)
-						count = count - 1
-					else
-						i = i + 1
-					end
-				end
-
-				local trunkcount = self._blocks:TrunkBlocks(self._sparksys)
-				if trunkcount > 0 then
-					self._score = trunkcount * 10 + self._score
-					self._blocks:FillScatteredList(self._scatterlist)
-				end
-			end
-			tbl:Draw(canvas, self._gears)
+			tbl:draw(canvas, self._gears)
 		else
 			-- triblock
-			local x, y = self._triblock:XIdx(), self._triblock:YIdx()
-			if (y >= BLOCK_HEIGHT or self._blocks:GetImgIdx(x, y+1) ~= 0) then
-				self._score = self._blocks:AddTri(self._triblock, self._scatterlist,
-											  self._sparksys)*10 + self._score
-				if (self._blocks[x][y] ~= 0 and y <= 3) then
-					print("over")
-					self._state = PLAYING_STATE.OVER
-					releaseRes()
-					break
-				end
-
-				self._triblock:Reset()
---				print("reset")
-			else
-				self._triblock:MoveDown()
-				canvas:Change()
-				self._triblock:Draw(canvas, self._gears)
-			end
+			self._triblock:draw(canvas, self._gears)
 		end
 
 		canvas:Change()
 		font:Draw(canvas, "" .. self._score, 0xff, 132, 405)
 
- 		self._sparksys:Move()
  		canvas:Change()
- 		self._sparksys:Draw(canvas)
+		self._sparkimg:draw(canvas, self._sparksys._sparks)
 
 		canvas:Change()
-		self._blocks:Draw(canvas, self._gears)
+		self._blocks:draw(canvas, self._gears)
 		coroutine.yield()
 	end
 end
 
 -- pause
-function ScenePlaying:Pause (canvas)
-	self._anipause = Animation.New(MAIN_RES_PKG,
+function sceneplaying:pause (canvas)
+	self._anipause = animation.new(MAIN_RES_PKG,
 								   PLAYING_PIC_PATH .. "pause.bmp",
 								   4, false)
-	self._anipause:SetPos((800-self._anipause:W())/2,
-						  (600-self._anipause:H())/2)
+	self._anipause:setpos((800-self._anipause:w())/2,
+						  (600-self._anipause:h())/2)
 
-	self._anipause:SetDuration(60)
-	self._anipause:Start()
+	self._anipause:setduration(60)
+	self._anipause:start()
 
 	coroutine.yield()
 
 	while (self._state ~= PLAYING_STATE.OVER) do
-		self._anipause:Draw(canvas)
+		self._anipause:draw(canvas)
 		coroutine.yield()
 	end
 
-	print("pause release")
+--	print("pause release")
 	self._anipause = nil
 end
 
 -- over
-function ScenePlaying:Over (canvas)
+function sceneplaying:over (canvas)
 	local function relaseRes () 
-		KeyListener.Remove("BACKSPACE")
-		KeyListener.Remove("ENTER")
-		KeyListener.RemoveAllListener()
+		keyboard.remove("BACKSPACE")
+		keyboard.remove("ENTER")
+		keyboard.removealllistener()
 	end
 
 	local name = ""
-	KeyListener.RegistAll(function (key)
---							  print("check key")
+	keyboard.registall(function (key)
 							  local char
 
 							  if (key+1 >= string.byte('A') and
@@ -291,18 +340,16 @@ function ScenePlaying:Over (canvas)
 							  end
 						  end)
 
-	KeyListener.Regist("ENTER", function ()
-									AddScoreToHighScore(name, self._score)
-									relaseRes()
-									print("before his")
-									pcall(SetGameState, GAME_STATES.HIGHSCORE)
-									print("end his")
+	keyboard.regist("ENTER", function ()
+								 score.addacoretohighscore(name, self._score)
+								 relaseRes()
+								 pcall(setgamestate, GAME_STATES.HIGHSCORE)
 								end)
-	KeyListener.Regist("BACKSPACE", function ()
-										local len = string.len(name)
-										if (len == 0) then return end
-										name = string.sub(name, 1, len-1)
-									end)
+	keyboard.regist("BACKSPACE", function ()
+									 local len = string.len(name)
+									 if (len == 0) then return end
+									 name = string.sub(name, 1, len-1)
+								 end)
 										
 
 	self._bmpplayername = WBitmap.Load(MAIN_RES_PKG,
@@ -311,9 +358,10 @@ function ScenePlaying:Over (canvas)
 	coroutine.yield()
 	
 	while (true) do
-		if (CheckHighScore(self._score)) then
+		print("before check score")
+		if (score.checkhighscore(self._score)) then
+			print("check ok")
 			canvas:Change()
-
 			font:Draw(canvas, name, 0xff, 370, 300)
 			self._bmpplayername:Draw(canvas, 
 									 (800-self._bmpplayername:W()) / 2,
@@ -331,49 +379,57 @@ end
 -------------------------------------------------------------------------------
 -- init scene playing
 -- 
-function ScenePlaying.Init ()
+function sceneplaying.init ()
 	local self = {}
+
+	-- init socket lib
+	socket.init()
+	self._t_socket = t_socket.create() -- create socket
 
 	self._bg = WBitmap.Load(MAIN_RES_PKG, 
 							PLAYING_PIC_PATH .. "background.bmp")
-	self._bgm = Music.Load(MAIN_RES_PKG, 
+	self._bgm = music.Load(MAIN_RES_PKG, 
 						   SOUND_PATH .. "game_playing.ogg",
-						   Music.TYPE.STREAM)
+						   music.TYPE.STREAM)
 	self._change = true
 	self._state = PLAYING_STATE.INIT
 
 	PLAYING_TASKS._tostart = coroutine.create(function (canvas)
-												  self:ToStart(canvas)
+												  self:tostart(canvas)
 											  end)
 	PLAYING_TASKS._playing = coroutine.create(function (canvas)
-												  self:Playing(canvas)
+												  self:playing(canvas)
 											  end)
 	PLAYING_TASKS._pause = coroutine.create(function (canvas)
-												self:Pause(canvas)
+												self:pause(canvas)
 											end)
 	PLAYING_TASKS._over = coroutine.create(function (canvas)
-											   self:Over(canvas)
+											   self:over(canvas)
 										   end)
 
-	if (IsPlayMusic()) then
-		self._bgm:Play(Music.TYPE.STREAM)
+	if (settings.isplaymusic()) then
+		self._bgm:Play(music.TYPE.STREAM)
 	end
 
-	setmetatable(self, {__index = ScenePlaying})
+	setmetatable(self, {__index = sceneplaying})
+	socket.connect(self._t_socket, DEFAULT_SERVER_PORT, "192.168.0.233")
 
 	return self
 end
 
 -------------------------------------------------------------------------------
-function ScenePlaying:Destroy ()
-	print("ScenePlaying:Destroy")
-	self._bgm:UnLoad(Music.TYPE.STREAM)
+function sceneplaying:destroy ()
+	-- release socket lib
+	self._t_socket = nil
+--	socket.shutdown()
+
+	self._bgm:UnLoad(music.TYPE.STREAM)
 	self._bgm = nil
 	self._bg = nil
 end
 
 -------------------------------------------------------------------------------
-function ScenePlaying:Draw (canvas)
+function sceneplaying:draw (canvas)
 	if (self._state == PLAYING_STATE.INIT) then
 		coroutine.resume(PLAYING_TASKS._tostart, canvas)
 	elseif (self._state == PLAYING_STATE.PLAYING) then

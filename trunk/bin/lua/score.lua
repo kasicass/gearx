@@ -1,4 +1,4 @@
--- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
+-- emacs: -*- mode: lua; coding: utf-8; -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -23,7 +23,11 @@
 
 -------------------------------------------------------------------------------
 -- file contain score infmation
-dofile("lua/highscore.lua")
+-- 
+require("highscore")
+require("serialize")
+
+module("score", package.seeall)
 
 -------------------------------------------------------------------------------
 
@@ -31,11 +35,12 @@ dofile("lua/highscore.lua")
 -- check score
 -- 
 -- @param score 
-function CheckHighScore (score)
-	if (#HIGH_SCORE < 10) then
+-- 
+function checkhighscore (score)
+	if (#highscore < 10) then
 		return true
-	elseif (#HIGH_SCORE == 10) then
-		if (HIGH_SCORE[10][2] < score) then
+	elseif (#highscore == 10) then
+		if (highscore[10][2] < score) then
 			return true
 		end
 	end
@@ -46,19 +51,19 @@ end
 -------------------------------------------------------------------------------
 -- sort highsore
 -- 
-function SortHighScore ()
-	local i = #HIGH_SCORE
+function sorthighscore ()
+	local i = #highscore
 	while (i > 1) do
-		if (HIGH_SCORE[i][2] > HIGH_SCORE[i-1][2]) then
-			HIGH_SCORE[i][2], HIGH_SCORE[i-1][2] = 
-				HIGH_SCORE[i-1][2], HIGH_SCORE[i][2]
-			HIGH_SCORE[i][1], HIGH_SCORE[i-1][1] =
-				HIGH_SCORE[i-1][1], HIGH_SCORE[i][1]
-		elseif (HIGH_SCORE[i][1] > HIGH_SCORE[i-1][1]) then
-			HIGH_SCORE[i][2], HIGH_SCORE[i-1][2] = 
-				HIGH_SCORE[i-1][2], HIGH_SCORE[i][2]
-			HIGH_SCORE[i][1], HIGH_SCORE[i-1][1] =
-				HIGH_SCORE[i-1][1], HIGH_SCORE[i][1]
+		if (highscore[i][2] > highscore[i-1][2]) then
+			highscore[i][2], highscore[i-1][2] = 
+				highscore[i-1][2], highscore[i][2]
+			highscore[i][1], highscore[i-1][1] =
+				highscore[i-1][1], highscore[i][1]
+		elseif (highscore[i][1] > highscore[i-1][1]) then
+			highscore[i][2], highscore[i-1][2] = 
+				highscore[i-1][2], highscore[i][2]
+			highscore[i][1], highscore[i-1][1] =
+				highscore[i-1][1], highscore[i][1]
 		else
 			break
 		end
@@ -73,24 +78,24 @@ end
 -- @param name
 -- @param score
 -- 
-function AddScoreToHighScore (name, score)
-	local count = #HIGH_SCORE
+function addscoretohighscore (name, score)
+	local count = #highscore
 	if (count < 10) then
-		table.insert(HIGH_SCORE, {name, score})
+		table.insert(highscore, {name, score})
 	elseif (count == 10) then
-		table.remove(HIGH_SCORE, 10)
-		table.insert(HIGH_SCORE)
+		table.remove(highscore, 10)
+		table.insert(highscore)
 	end
 
-	SortHighScore()
+	sorthighscore()
 end
 
 -------------------------------------------------------------------------------
 -- save high score
 -- 
-function SaveHighScore ()
+function savehighscore ()
 	local f = assert(io.open("lua/highscore.lua", "w"))
-	local str = "HIGH_SCORE = " .. serializenoidx(HIGH_SCORE)
+	local str = "highscore = " .. serialize.serializenoidx(highscore)
 	f:write(str)
 	f:close()
 end

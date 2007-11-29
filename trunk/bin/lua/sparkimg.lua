@@ -17,18 +17,51 @@
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-	$Id$
+	$Id: $
 	ChenZaichun@gmail.com
 --]]
 
 -------------------------------------------------------------------------------
+require("blockcfg")
+require("spark")
 
-module("utility", package.seeall)
+-------------------------------------------------------------------------------
+sparkimg = {}
 
-function printf(fmt, ...)
-    print(fmt:format(...))
+local SPARK_TOTAL_COUNT = 10 	-- image count
+
+function sparkimg.init ()
+	local self = {}
+
+	self._bmp = WBitmap.Load(MAIN_RES_PKG,
+							 PLAYING_PIC_PATH .. "spark.bmp")
+	local w, h = self._bmp:W() / SPARK_TOTAL_COUNT, self._bmp:H()
+
+	for i = 1, SPARK_TOTAL_COUNT do
+		self[i] = WBitmap.Create(self._bmp, (i-1)*w, 0, w, h)
+	end
+
+	setmetatable(self, {__index = sparkimg})
+
+	return self
 end
 
 -------------------------------------------------------------------------------
-_G[cprintf] = printf
-_G[printf] = print
+-- Draw Sparks
+-- 
+function sparkimg:draw (canvas, sparks)
+	if (#sparks == 0) then
+		return
+	end
+
+	for i = 1, #sparks do
+		-- call spark draw
+		self[sparks[i]._frame]:Draw(canvas, 
+					 sparks[i]._x + BLOCK_OFFSET_X,
+					 sparks[i]._y + BLOCK_OFFSET_Y,
+					  BLIT_STYLE.BLIT_MASK)
+	end
+end
+
+-------------------------------------------------------------------------------
+

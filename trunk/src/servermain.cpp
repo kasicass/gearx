@@ -1,6 +1,6 @@
--- emacs: -*- mode: lua; coding: utf-8; -*- 
+//  emacs: -*- mode: c++; coding: utf-8; -*-
 
---[[
+/*
     Copyright (C) 2007 GearX Team
 
     This source code is free software; you can redistribute it and/or
@@ -17,18 +17,38 @@
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-	$Id$
-	ChenZaichun@gmail.com
---]]
+    $Id: $
+    ChenZaichun@gmail.com
+*/
 
--------------------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////////////
+#include "GXLua.hpp"
 
-module("utility", package.seeall)
+#define MAIN_SCRIPT "server.lua"
 
-function printf(fmt, ...)
-    print(fmt:format(...))
-end
+int main()
+{
+	lua_State* L;
+	L = lua_open();
+	if (L == NULL) {
+		printf("cannot create lua state\n");
+		return 1;
+	}
+	luaL_openlibs(L);
 
--------------------------------------------------------------------------------
-_G[cprintf] = printf
-_G[printf] = print
+	if (luaL_loadfile(L, MAIN_SCRIPT)) {
+		printf("%s", lua_tostring(L, -1));
+		return 1;
+	}
+	if (lua_pcall(L, 0, 0, 0)) {
+		printf("%s", lua_tostring(L, -1));
+		return 1;
+	}
+
+	lua_close(L);
+
+	return 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+// end of servermain.cpp

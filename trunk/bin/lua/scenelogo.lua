@@ -1,4 +1,4 @@
--- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
+-- emacs: -*- mode: lua; coding: utf-8; -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -23,9 +23,9 @@
 
 -------------------------------------------------------------------------------
 
-SceneLogo = {}
+scenelogo = {}
 
-function SceneLogo.Init ()
+function scenelogo.init ()
 	local self = {}
 	self._logo = {
 		_bmp = WBitmap.Load(MAIN_RES_PKG,
@@ -35,17 +35,16 @@ function SceneLogo.Init ()
 	}
 	
 	self._bg = WBitmap.CreateEmpty(self._logo._bmp:W(), self._logo._bmp:H(), 0xffffff)
-	self._bgm = Music.Load(MAIN_RES_PKG, "data/sound/game_exit.ogg", Music.TYPE.STREAM)
-	self._bgm:Play(Music.TYPE.STREAM)
+	self._bgm = music.Load(MAIN_RES_PKG, "data/sound/game_exit.ogg", music.TYPE.STREAM)
+	self._bgm:Play(music.TYPE.STREAM)
 	
-	setmetatable(self, {__index = SceneLogo})
+	setmetatable(self, {__index = scenelogo})
 	
 	return self
 end
 
-function SceneLogo:Destroy ()
-	printf("logo gc")
-	self._bgm:UnLoad()
+function scenelogo:destroy ()
+	self._bgm:UnLoad(music.TYPE.STREAM)
 	self._bgm = nil
 	self._bg = nil
 	self._logo._bmp = nil
@@ -53,9 +52,9 @@ function SceneLogo:Destroy ()
 end
 
 local alpha = 255
-function SceneLogo:Draw (canvas)
+function scenelogo:draw (canvas)
 	if (alpha <= 0) then
-		local ret, msg = pcall(SetGameState, GAME_STATES.MAINMENU)
+		local ret, msg = pcall(setgamestate, GAME_STATES.MAINMENU)
 		if (not ret) then
 			print(msg)
 		end

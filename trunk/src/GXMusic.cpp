@@ -1,4 +1,4 @@
-/*  emacs: -*- mode: cc; coding: gb2312 -*- TAB SIZE: 4 -*-  */
+//  emacs: -*- mode: c++; coding: utf-8; -*- 
 
 /*
     Copyright (C) 2007 GearX Team
@@ -27,15 +27,15 @@
  * @date   Mon Nov 12 16:35:13 2007
  * 
  * @brief  fmod lua bind
- * 
- * 		   封装了读取wdf包内声音文件，并暴露接口使之能够在Lua中使用
+ *
+ *		   encapsulate reading sound in wdf package
  */
 
-
+///////////////////////////////////////////////////////////////////////////////
 #include "GXMusic.h"
 #include "fmod.h"
 
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 // prototypes
 void* F_CALLBACKAPI MusicOpen(const char *name);
 void  F_CALLBACKAPI MusicClose(void *handle);
@@ -43,7 +43,7 @@ int	  F_CALLBACKAPI MusicRead(void *buffer, int size, void *handle);
 int   F_CALLBACKAPI MusicSeek(void *handle, int pos, signed char mode);
 int   F_CALLBACKAPI MusicTell(void *handle);
 
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 /** 
  * wrapper of fopen for reading wdf package 
  * 
@@ -60,9 +60,9 @@ void* F_CALLBACKAPI MusicOpen(const char *name)
 }
 
 /** 
+ * wrapper of fclose for wdf package file
  * 
- * 
- * @param handle 
+ * @param handle WFile pointer
  * 
  * @return 
  */
@@ -72,6 +72,15 @@ void  F_CALLBACKAPI MusicClose(void *handle)
 	SAFEDELETE(file);
 }
 
+/** 
+ * wrapper of fread for wdf package file
+ * 
+ * @param buffer buffer data to be stored
+ * @param size size to read
+ * @param handle pointer to WFile
+ * 
+ * @return readed size
+ */
 int	  F_CALLBACKAPI MusicRead(void *buffer, int size, void *handle)
 {
 	int read = 0;
@@ -80,6 +89,15 @@ int	  F_CALLBACKAPI MusicRead(void *buffer, int size, void *handle)
 	return read;
 }
 
+/** 
+ * wrapper of fseek fow wdf package file
+ * 
+ * @param handle pointer to WFile
+ * @param pos position to seek
+ * @param mode seek mode
+ * 
+ * @return 
+ */
 int   F_CALLBACKAPI MusicSeek(void *handle, int pos, signed char mode)
 {
 	int cur = MusicTell(handle);
@@ -102,25 +120,44 @@ int   F_CALLBACKAPI MusicSeek(void *handle, int pos, signed char mode)
 	return 0;
 }
 
+/** 
+ * wrapper of ftell for wdf package
+ * 
+ * @param handle 
+ * 
+ * @return 
+ */
 int   F_CALLBACKAPI MusicTell(void *handle)
 {
 	return ((WFile*)handle)->Tell();
 }
 
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXMusic_Init(lua_State* L)
 {
 	if (FSOUND_GetVersion() < FMOD_VERSION)	{ 
-//		FSOUND_Close(); 
 		return false; 
 	}
 
+	// set dsound will cause no sound in my laptop
 //	FSOUND_SetOutput(FSOUND_OUTPUT_DSOUND);
 //	FSOUND_SetDriver(FSOUND_OUTPUT_DSOUND);
 
-	FSOUND_File_SetCallbacks(MusicOpen, MusicClose, MusicRead, MusicSeek, MusicTell);
+	FSOUND_File_SetCallbacks(MusicOpen,
+							 MusicClose,
+							 MusicRead,
+							 MusicSeek,
+							 MusicTell);
 
-	if (!FSOUND_SetMemorySystem(malloc(4*1024*1024), 4*1024*1024, NULL, NULL, NULL)) {
+	if (!FSOUND_SetMemorySystem(malloc(4*1024*1024),
+								4*1024*1024, NULL, NULL, NULL)) {
 		return false;
 	}
 
@@ -133,6 +170,13 @@ static int GXMusic_Init(lua_State* L)
 	return true;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXMusic_Shutdown(lua_State* L)
 {
 	FSOUND_Close();
@@ -140,6 +184,13 @@ static int GXMusic_Shutdown(lua_State* L)
 	return 0;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXMusic_Load(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -166,6 +217,13 @@ static int GXMusic_Load(lua_State* L)
 	return 1;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXMusic_UnLoad(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -183,6 +241,13 @@ static int GXMusic_UnLoad(lua_State* L)
 	return 0;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXMusic_Play(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -201,6 +266,13 @@ static int GXMusic_Play(lua_State* L)
 	return 0;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXMusic_Stop(lua_State *L)
 {
 	LuaBinder binder(L);
@@ -211,7 +283,8 @@ static int GXMusic_Stop(lua_State *L)
 }
 
 
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/// 
 static const luaL_reg GXMusicLib[] = {
 	{"Init",		GXMusic_Init},
 	{"Shutdown",	GXMusic_Shutdown},
@@ -222,8 +295,15 @@ static const luaL_reg GXMusicLib[] = {
 	{NULL,			NULL}
 };
 
-
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
+extern "C"
 int luaopen_GXMusicLib(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -232,3 +312,5 @@ int luaopen_GXMusicLib(lua_State* L)
 	return 1;
 }
 
+///////////////////////////////////////////////////////////////////////////////
+// end of GXMusic.cpp

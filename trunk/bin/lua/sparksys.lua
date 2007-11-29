@@ -17,74 +17,96 @@
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-	$Id$
+	$Id: $
 	ChenZaichun@gmail.com
 --]]
 
 -------------------------------------------------------------------------------
-
-timer = {}
+require("blockcfg")
+require("timer")
+require("spark")
 
 -------------------------------------------------------------------------------
--- create a new timer
+-------------------------------------------------------------------------------
+-- Sparak System
 -- 
--- @param duration duration of the timer
--- 
--- @return the timer
--- 
-function timer.new (duration)
-	local self = {}
-	self._timer = GXTimer.Create()
-	self._duration = duration or 100
-	self._active = false
+sparksys = {}
 
-	setmetatable(self, {__index = timer})
-	
+local SPARK_TOTAL_COUNT = 10
+
+-------------------------------------------------------------------------------
+-- Init Spark System
+-- 
+function sparksys.init ()
+	local self = {}
+
+	setmetatable(self, {__index = sparksys})
+
+	self._sparks = {}
+	self._timermotion = timer.new(30)
+	self._timerframe = timer.new(30)
+	self._timermotion:start()
+	self._timerframe:start()
+
 	return self
 end
 
 -------------------------------------------------------------------------------
--- reset the timer duration
+-- Create Spark
 -- 
-function timer:setduration (duration)
-	self._duration = duration
+function sparksys:createspark(x, y)
+	local spark = spark.new(x, y)
+	table.insert(self._sparks, spark)
+--	print("count: ", #self._sparks)
+end
+
+
+-------------------------------------------------------------------------------
+-- reset sparks
+-- 
+function sparksys:reset ()
+	self._sparks = {}
+end
+
+function sparksys:add (x, y, frame)
+	table.insert(self._sparks, spark.new(x, y, frame))
 end
 
 -------------------------------------------------------------------------------
--- start the timer
+-- moving sparks
 -- 
-function timer:start ()
-	self._active = true
-	self._timer:Start()
-end
+function sparksys:move ()
+	local count = #self._sparks
+	if (count == 0) then return end
 
--------------------------------------------------------------------------------
--- stop the timer
--- 
-function timer:stop ()
-	self._active = false
-	self._timer:Stop()
-end
+	if (self._timermotion:isactive()) then
+		for i = 1, count do
+			self._sparks[i]:move()
+		end
+	end
 
--------------------------------------------------------------------------------
--- test for the timer is atcive
--- 
-function timer:isactive ()
-	if (not self._active) then return false end
-	
-	duration = self._timer:GetTime()
-	if (duration >= self._duration) then
-		self._timer:Reset()
-		return true
+	if (self._timerframe:isactive()) then
+		local i = 1
+		while (i <= count) do
+			if (self._sparks[i]._frame >= SPARK_TOTAL_COUNT) then
+				table.remove(self._sparks, i)
+				count = count - 1
+			else
+				self._sparks[i]._frame = self._sparks[i]._frame + 1
+				i = i + 1
+			end
+		end
 	end
 end
 
-
 -------------------------------------------------------------------------------
--- reset timer
--- 
-function timer:reset()
-	self._timer:Reset()
+
+function sparksys:getcount ()
+	return #self._sparks
+end
+
+function sparksys:getspark(idx)
+	return self._sparks[idx]
 end
 
 -------------------------------------------------------------------------------

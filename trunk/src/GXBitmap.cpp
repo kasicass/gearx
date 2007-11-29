@@ -1,13 +1,53 @@
+//  emacs: -*- mode: c++; coding: utf-8; -*-
 
-/*!
- * $Id$
- *
- * \brief	对于WBitmap的luabind，Lua中使用
+/*
+    Copyright (C) 2007 GearX Team
+
+    This source code is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    This source code is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+    $Id$
+    ChenZaichun@gmail.com
+*/
+
+/**
+ * @file   GXBitmap.cpp
+ * @author ChenZaichun <ChenZaichun@gmail.com>
+ * @date   Sun Nov 25 17:19:45 2007
+ * 
+ * @brief  WBitmap for Lua
+ * 
+ * 
  */
 
+///////////////////////////////////////////////////////////////////////////////
 #include "GXBitmap.h"
 
-//////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/** 
+ * load bitmap from wdf package
+ * 
+ * @param L pointer to lua
+ *
+ *			parameter from lua:
+ *				pkgname wdf package file name
+ *				filename file to be loaded
+ * 
+ * @return 1
+ *
+ *			return WBitmap object to lua
+ */
 static int WBitmap_Load(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -17,6 +57,7 @@ static int WBitmap_Load(lua_State* L)
 	WFile::OpenDataFile(pkgname);
 	f.Load(filename);
 	WBitmap* bmp = new WBitmap;
+	assert(bmp);
 	bmp->Load(f);
 
 	binder.pushusertype(bmp, GXBITMAP_CLASSNAME);
@@ -24,6 +65,13 @@ static int WBitmap_Load(lua_State* L)
 	return 1;
 }
 
+/** 
+ * destroy wbitmap object, called by lua __gc
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int WBitmap_Destory(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -33,6 +81,15 @@ static int WBitmap_Destory(lua_State* L)
 	return 0;
 }
 
+/** 
+ * create sub bitmap by parent bitmap
+ * 
+ * @param L 
+ * 
+ * @return 1
+ *
+ *			WBitmap object for lua
+ */
 static int WBitmap_Create(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -48,6 +105,15 @@ static int WBitmap_Create(lua_State* L)
 	return 1;
 }
 
+/** 
+ * create empty bitmap by color
+ * 
+ * @param L 
+ * 
+ * @return 1
+ *
+ *			WBitmap object
+ */
 static int WBitmap_CreateEmpty(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -63,6 +129,13 @@ static int WBitmap_CreateEmpty(lua_State* L)
 	return 1;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int WBitmap_Draw(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -78,26 +151,47 @@ static int WBitmap_Draw(lua_State* L)
 	return 0;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int WBitmap_GetW(lua_State* L)
 {
 	LuaBinder binder(L);
 	WBitmap* bmp = (WBitmap*)(binder.checkusertype(1, GXBITMAP_CLASSNAME));
 
-	binder.pushnumber((double)(bmp->GetW()));
+	binder.pushnumber((lua_Number)(bmp->GetW()));
 
 	return 1;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int WBitmap_GetH(lua_State* L)
 {
 	LuaBinder binder(L);
 	WBitmap* bmp = (WBitmap*)(binder.checkusertype(1, GXBITMAP_CLASSNAME));
 
-	binder.pushnumber((double)(bmp->GetH()));
+	binder.pushnumber((lua_Number)(bmp->GetH()));
 
 	return 1;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int WBitmap_IsCover(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -106,11 +200,18 @@ static int WBitmap_IsCover(lua_State* L)
 	int y = (int)(binder.checknumber(3));
 
 	int ret = bmp->IsCover(WPoint(x, y));
-	binder.pushnumber(ret);
+	binder.pushnumber((lua_Number)(ret));
 
 	return 1;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int WBitmap_SetData(lua_State * L)
 {
 	LuaBinder binder(L);
@@ -123,9 +224,9 @@ static int WBitmap_SetData(lua_State * L)
 }
 
 //////////////////////////////////////////////////////////////////////////
+/// bitmap exported function for lua
 static const luaL_reg WBitmapLib[] = {
 	{"Load",		WBitmap_Load},
-//	{"Destroy",		WBitmap_Destory},
 	{"Create",		WBitmap_Create},
 	{"Draw",		WBitmap_Draw},
 	{"W",			WBitmap_GetW},
@@ -136,6 +237,16 @@ static const luaL_reg WBitmapLib[] = {
 	{NULL,			NULL},
 };
 
+///////////////////////////////////////////////////////////////////////////////
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 1
+ *
+ */
+extern "C"
 int luaopen_GXBitmapLib(lua_State* L)
 {
 	LuaBinder binder(L);

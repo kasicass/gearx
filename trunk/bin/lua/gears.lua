@@ -1,4 +1,4 @@
--- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
+-- emacs: -*- mode: lua; coding: utf-8; -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -22,23 +22,12 @@
 --]]
 
 -------------------------------------------------------------------------------
--- globals
-BLOCK_SIZE = 32 				-- each gear width
-BLOCK_WIDTH = 8					-- block x-axis count
-BLOCK_HEIGHT = 16				-- block y-axis count
-GEARS_COUNT = 6					-- total image of gears
-BLOCK_TOTAL_WIDTH = BLOCK_WIDTH * BLOCK_SIZE -- block size
-BLOCK_TOTAL_HEIGHT = BLOCK_HEIGHT * BLOCK_SIZE -- block height
-BLOCK_OFFSET_X = 280	     	-- start of the drawing area 
-BLOCK_OFFSET_Y = 0				--
-
--------------------------------------------------------------------------------
 -- gear class 
-Gears = {}
+gears = {}
 
 -------------------------------------------------------------------------------
 -- init Gears
-function Gears.Init()
+function gears.init()
 	local self = {}
 	-- load main bitmap
 	self._img = WBitmap.Load(MAIN_RES_PKG,
@@ -52,14 +41,15 @@ function Gears.Init()
 										0, w, h)
 	end
 
-	setmetatable(self, {__index = Gears})
+	setmetatable(self, {__index = gears})
 
 	return self
 end
 
 -------------------------------------------------------------------------------
 -- draw gear
-function Gears:Draw (canvas, x, y, idx)
+function gears:draw (canvas, x, y, idx)
+	-- call bitmap draw
 	self._gear[idx]:Draw(canvas, x, 
 						 y, BLIT_STYLE.BLIT_MASK)
 end
@@ -68,7 +58,7 @@ end
 -- Get image by index
 -- \param idx: index of the image
 -- \return the image (WBitmap)
-function Gears:GetImg (idx)
+function gears:getimg (idx)
 	return self._gear[idx]
 end
 

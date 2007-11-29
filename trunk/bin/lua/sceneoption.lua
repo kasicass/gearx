@@ -1,4 +1,4 @@
--- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
+-- emacs: -*- mode: lua; coding: utf-8; -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -24,10 +24,12 @@
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
-dofile("lua/onoffbutton.lua")
+require("onoffbutton")
+require("settings")
+
 
 -------------------------------------------------------------------------------
-SceneOption = {}
+sceneoption = {}
 
 -------------------------------------------------------------------------------
 local OPTION_PIC_PATH = "data/pic/options/"
@@ -38,51 +40,36 @@ local MODE_TEXT = {
 }
 
 -------------------------------------------------------------------------------
-function SceneOption.Init ()
+function sceneoption.init ()
 	local self = {}
 	self._bg = WBitmap.Load(MAIN_RES_PKG, 
 								  OPTION_PIC_PATH .. "background.bmp")
 
-	OnOffButton.Init(MAIN_RES_PKG, 
+	onoffbutton.init(MAIN_RES_PKG, 
 					 OPTION_PIC_PATH .. "check_button_on.bmp",
 					 OPTION_PIC_PATH .. "check_button_off.bmp",
 					 2, true)
-	self._sound = OnOffButton.New(380, 280, 480, 280, IsPlaySound())
-	self._music = OnOffButton.New(380, 205, 480, 205, IsPlayMusic())
+	self._sound = onoffbutton.new(380, 280, 480, 280, settings.isplaysound())
+	self._music = onoffbutton.new(380, 205, 480, 205, settings.isplaymusic())
 
---[[
-	self._sound = OnOffButton.New(MAIN_RES_PKG, 
-								  OPTION_PIC_PATH .. "check_button_on.bmp",
-								  OPTION_PIC_PATH .. "check_button_off.bmp",
-								  2, true, 
-								  380, 205,
-								  480, 205, IsPlaySound())
-								  
-	self._music = OnOffButton.New(MAIN_RES_PKG, 
-								  OPTION_PIC_PATH .. "check_button_on.bmp",
-								  OPTION_PIC_PATH .. "check_button_off.bmp",
-								  2, true,
-								  380, 280,
-								  480, 280, IsPlayMusic())
---]]
-	self._close = Button.New(MAIN_RES_PKG,
+	self._close = button.new(MAIN_RES_PKG,
 							 OPTION_PIC_PATH .. "btn_close.bmp",
 							 2, true, 584, 137)
 
-	self._leftarrow = Button.New(MAIN_RES_PKG,
+	self._leftarrow = button.new(MAIN_RES_PKG,
 								 OPTION_PIC_PATH .. "btn_left_arrow.bmp",
 								 2, true, 380, 380)
-	self._rightarrow = Button.New(MAIN_RES_PKG,
+	self._rightarrow = button.new(MAIN_RES_PKG,
 								  OPTION_PIC_PATH .. "btn_right_arrow.bmp",
 								  2, true, 525, 380)
 	self._change = true
-	self._mode = IsFullScreen() and 2 or 1
+	self._mode = settings.isfullscreen() and 2 or 1
 
 	local function LBtnDown(obj)
 		return function (x, y)
-				   local ret = obj:IsCover(x, y)
+				   local ret = obj:iscover(x, y)
 				   if (ret) then
-					   local noerr, msg = pcall(SetGameState,
+					   local noerr, msg = pcall(setgamestate,
 												GAME_STATES.MAINMENU)
 					   if (not noerr) then
 						   print(msg)
@@ -95,19 +82,19 @@ function SceneOption.Init ()
 
 	local function MouseMoveMsg (obj)
 		return function (x, y)
-				   return obj:IsCover(x, y)
+				   return obj:iscover(x, y)
 			   end
 	end
 
 	local function OnOffMouseDown (obj, music)
 		return function (x, y)
-				   local ret = obj:IsCover(x, y)
+				   local ret = obj:iscover(x, y)
 				   if ret then 
 					   self._change = true
 					   if (music) then
-						   GAME_SETTING.MUSIC = not IsPlayMusic()
+						   settings.playmusic(not settings.isplaymusic())
 					   else
-						   GAME_SETTING.SOUND = not IsPlaySound()
+						   settings.playsound(not settings.isplaysound())
 					   end
 				   end
 				   return ret
@@ -116,44 +103,44 @@ function SceneOption.Init ()
 
 	local function ModeBtnDown (obj, mode)
 		return function (x, y)
-				   local ret = obj:IsCover(x, y)
+				   local ret = obj:iscover(x, y)
 				   if (ret) then
 					   self._mode = mode
 					   self._change = true
 					   if (mode == 1) then
-						   FullScreen(false)
+						   settings.fullscreen(false)
 					   else
-						   FullScreen(true)
+						   settings.fullscreen(true)
 					   end
 				   end
 				   return ret
 			   end
 	end
 
-	MouseListener.Regist("LBUTTONDOWN", OnOffMouseDown(self._sound, false))
-	MouseListener.Regist("LBUTTONDOWN", OnOffMouseDown(self._music, true))
-	MouseListener.Regist("MOUSEMOVE", MouseMoveMsg(self._close))
-	MouseListener.Regist("LBUTTONDOWN", LBtnDown(self._close))
-	MouseListener.Regist("MOUSEMOVE", MouseMoveMsg(self._leftarrow))
-	MouseListener.Regist("MOUSEMOVE", MouseMoveMsg(self._rightarrow))
-	MouseListener.Regist("LBUTTONDOWN", ModeBtnDown(self._leftarrow, 1))
-	MouseListener.Regist("LBUTTONDOWN", ModeBtnDown(self._rightarrow, 2))
+	mouse.regist("LBUTTONDOWN", OnOffMouseDown(self._sound, false))
+	mouse.regist("LBUTTONDOWN", OnOffMouseDown(self._music, true))
+	mouse.regist("MOUSEMOVE", MouseMoveMsg(self._close))
+	mouse.regist("LBUTTONDOWN", LBtnDown(self._close))
+	mouse.regist("MOUSEMOVE", MouseMoveMsg(self._leftarrow))
+	mouse.regist("MOUSEMOVE", MouseMoveMsg(self._rightarrow))
+	mouse.regist("LBUTTONDOWN", ModeBtnDown(self._leftarrow, 1))
+	mouse.regist("LBUTTONDOWN", ModeBtnDown(self._rightarrow, 2))
 
-	KeyListener.Regist ("ESC", function () 
-								   pcall(SetGameState, GAME_STATES.MAINMENU)
+	keyboard.regist ("ESC", function () 
+								   pcall(setgamestate, GAME_STATES.MAINMENU)
 							   end)
 
-	setmetatable(self, {__index = SceneOption})
+	setmetatable(self, {__index = sceneoption})
 
 	return self
 end
 
-function SceneOption:Draw (canvas)
-	self._leftarrow:Draw(canvas)
-	self._rightarrow:Draw(canvas)
-	self._close:Draw(canvas)
-	self._sound:Draw(canvas)
-	self._music:Draw(canvas)
+function sceneoption:draw (canvas)
+	self._leftarrow:draw(canvas)
+	self._rightarrow:draw(canvas)
+	self._close:draw(canvas)
+	self._sound:draw(canvas)
+	self._music:draw(canvas)
 
 	font:Draw(canvas, MODE_TEXT[self._mode], 0xff, 415, 385)
 
@@ -167,8 +154,8 @@ function SceneOption:Draw (canvas)
 	self._bg:Draw(canvas, 184, 125, BLIT_STYLE.BLIT_MASK)
 end
 
-function SceneOption:Destroy ()
-	KeyListener.RemoveAll()
-	MouseListener.RemoveAll()
+function sceneoption:destroy ()
+	keyboard.removeall()
+	mouse.removeall()
 end
 

@@ -1,4 +1,4 @@
--- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
+-- emacs: -*- mode: lua; coding: utf-8; -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -23,18 +23,10 @@
 
 -------------------------------------------------------------------------------
 -- utilities
-require("Timer")
-require("Settings")
---dofile("../script/timer.lua")
---dofile("../script/utility.lua")
---dofile("../script/settings.lua")
---dofile("../script/button.lua")
-require("Button")
---require("MouseListener")
-dofile("lua/mouse.lua")
-dofile("lua/keyboard.lua")
-dofile("lua/music.lua")
-dofile("lua/animation.lua")
+package.cpath = "../" .. package.cpath
+require("gxbase")
+require("score")
+require("settings")
 
 -------------------------------------------------------------------------------
 MAIN_PATH = "" -- "../data/"
@@ -71,44 +63,50 @@ WND_MSG = {
 font = WFont.Create("Verdana", 24)
 
 -------------------------------------------------------------------------------
-GameState = {
+gamestate = {
 --	_state = GAME_STATES.INIT,
 	_state = GAME_STATES.MAINMENU,
 --	_state = GAME_STATES.PLAYING,
 	_laststate = -1
 }
 
-function SetGameState (state)
+function setgamestate (state)
 	print("state change")
-	GameState._state = state
-	GameState._scene:Destroy()
-	GameState._scene = nil
+	gamestate._state = state
+	gamestate._scene:destroy()
+	gamestate._scene = nil
 end
 
 -------------------------------------------------------------------------------
-dofile("lua/scenelogo.lua")
-dofile("lua/scenemainmenu.lua")
-dofile("lua/sceneplaying.lua")
-dofile("lua/sceneoption.lua")
-dofile("lua/scenehighscore.lua")
-dofile("lua/scenecredit.lua")
+require("scenelogo")
+require("scenemainmenu")
+require("sceneplaying")
+require("sceneoption")
+require("scenehighscore")
+require("scenecredit")
+-- dofile("lua/scenelogo.lua")
+-- dofile("lua/scenemainmenu.lua")
+-- dofile("lua/sceneplaying.lua")
+-- dofile("lua/sceneoption.lua")
+-- dofile("lua/scenehighscore.lua")
+-- dofile("lua/scenecredit.lua")
 
-GameState._INITFUNC = {
-	SceneLogo.Init,
-	SceneMainMenu.Init,
-	ScenePlaying.Init,
-	SceneOption.Init,
-	SceneHighScore.Init,
-	SceneCredit.Init,
+gamestate._INITFUNC = {
+	scenelogo.init,
+	scenemainmenu.init,
+	sceneplaying.init,
+	sceneoption.init,
+	scenehighscore.init,
+	scenecredit.init,
 }
 
-GameState._DRAWFUNC = {
-	SceneLogo.Draw,
-	SceneMainMenu.Draw,
-	ScenePlaying.Draw,
-	SceneOption.Draw,
-	SceneHighScore.Draw,
-	SceneCredit.Draw,
+gamestate._DRAWFUNC = {
+	scenelogo.draw,
+	scenemainmenu.draw,
+	sceneplaying.draw,
+	sceneoption.draw,
+	scenehighscore.draw,
+	scenecredit.draw,
 }
 
 -------------------------------------------------------------------------------
@@ -123,44 +121,47 @@ function GXInit (hwnd)
 	g_surface = WSurface.Create(hwnd, g_canvas)
 	g_canvas:Reset(30)
 	g_canvas:Clear(0xffffff)
-	Music.Init();
+	music.Init();
 end
 
 -------------------------------------------------------------------------------
 function GXMain ()
 	local ret
-	if (GameState._scene == nil) then
-		ret, GameState._scene = pcall(GameState._INITFUNC[GameState._state])
-		print("change scene")
-		print("current state is: ", GameState._state)
+	if (gamestate._scene == nil) then
+		ret, gamestate._scene = pcall(gamestate._INITFUNC[gamestate._state])
+ 		print("change scene")
+ 		print("current state is: ", gamestate._state)
 	end
 	
-	ret = pcall(GameState._DRAWFUNC[GameState._state], GameState._scene, g_canvas)
+	ret = pcall(gamestate._DRAWFUNC[gamestate._state], gamestate._scene, g_canvas)
 
 	g_surface:Blit2Screen()
 end
 
 -------------------------------------------------------------------------------
 function GXMouseMove (x, y)
-	MouseListener.Check("MOUSEMOVE", x, y)
+	mouse.check("MOUSEMOVE", x, y)
 end
 
 function GXLButtonDown (x, y)
-	MouseListener.Check("LBUTTONDOWN", x, y)
+	mouse.check("LBUTTONDOWN", x, y)
 end
 
 -------------------------------------------------------------------------------
 function GXKeyDown (key)
-	KeyListener.Check(key)
+	keyboard.check(key)
 end
 
 -------------------------------------------------------------------------------
 function GXExit ()
-	SaveHighScore()
-	SaveSettings()
-	GameState._scene:Destroy()
-	GameState._scene = nil
+	score.savehighscore()
+	settings.savesettings()
+	gamestate._scene:destroy()
+	music.Shutdown()
+	gamestate._scene = nil
 	font = nil
+	g_surface = nil
+	g_canvas = nil
 end
 
 -------------------------------------------------------------------------------
@@ -169,9 +170,9 @@ function WndProc (msg, wparam, lparam)
 	if (msg == WND_MSG.WM_KEYDOWN) then
 		GXKeyDown(wparam)
 	elseif (msg == WND_MSG.WM_MOUSEMOVE) then
-		GXMouseMove(LOWORD(lparam), HIWORD(lparam))
+		GXMouseMove(bit.loword(lparam), bit.hiword(lparam))
 	elseif (msg == WND_MSG.WM_LBUTTONDOWN) then
-		GXLButtonDown(LOWORD(lparam), HIWORD(lparam))
+		GXLButtonDown(bit.loword(lparam), bit.hiword(lparam))
 	else
 		return false
 	end

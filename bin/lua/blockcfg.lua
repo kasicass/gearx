@@ -17,18 +17,20 @@
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-	$Id$
+	$Id: $
 	ChenZaichun@gmail.com
 --]]
 
 -------------------------------------------------------------------------------
 
-module("utility", package.seeall)
+module("blockcfg", package.seeall)
 
-function printf(fmt, ...)
-    print(fmt:format(...))
-end
-
--------------------------------------------------------------------------------
-_G[cprintf] = printf
-_G[printf] = print
+-- globals
+_G.BLOCK_SIZE = 32 				-- each gear width
+_G.BLOCK_WIDTH = 8					-- block x-axis count
+_G.BLOCK_HEIGHT = 16				-- block y-axis count
+_G.GEARS_COUNT = 6					-- total image of gears
+_G.BLOCK_TOTAL_WIDTH = BLOCK_WIDTH * BLOCK_SIZE -- block size
+_G.BLOCK_TOTAL_HEIGHT = BLOCK_HEIGHT * BLOCK_SIZE -- block height
+_G.BLOCK_OFFSET_X = 280	     	-- start of the drawing area 
+_G.BLOCK_OFFSET_Y = 0				--

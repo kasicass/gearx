@@ -1,6 +1,6 @@
--- emacs: -*- mode: lua; coding: utf-8; -*- 
+//  emacs: -*- mode: c++; coding: utf-8; -*-
 
---[[
+/*
     Copyright (C) 2007 GearX Team
 
     This source code is free software; you can redistribute it and/or
@@ -17,18 +17,32 @@
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-	$Id$
-	ChenZaichun@gmail.com
---]]
+    $Id: $
+    ChenZaichun@gmail.com
+*/
 
--------------------------------------------------------------------------------
+#include "GXFile.h"
+#include "GXBitmap.h"
+#include "GXCanvas.h"
+#include "GXSurface.h"
+#include "GXMusic.h"
+#include "GXTimer.h"
+#include "GXFont.h"
 
-module("utility", package.seeall)
+extern
+int __stdcall luaopen_bit(lua_State* L);
 
-function printf(fmt, ...)
-    print(fmt:format(...))
-end
+extern "C"
+__declspec(dllexport) int luaopen_gxbase(lua_State* L)
+{
+	luaopen_GXFileLib(L);
+	luaopen_GXBitmapLib(L);
+	luaopen_GXCanvasLib(L);
+	luaopen_GXSurfaceLib(L);
+	luaopen_GXMusicLib(L);
+	luaopen_GXTimer(L);
+	luaopen_FontLib(L);
+	luaopen_bit(L);
 
--------------------------------------------------------------------------------
-_G[cprintf] = printf
-_G[printf] = print
+	return 0;
+}

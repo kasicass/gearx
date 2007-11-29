@@ -1,4 +1,4 @@
-HIGH_SCORE = {
+highscore = {
 	{
 	"GOSLA",
 	1300,

@@ -1,4 +1,4 @@
--- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
+-- emacs: -*- mode: lua; coding: utf-8; -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -22,17 +22,21 @@
 --]]
 
 -------------------------------------------------------------------------------
-Spark = {}
+require("blockcfg")
+
+-------------------------------------------------------------------------------
+spark = {}
 
 -------------------------------------------------------------------------------
 -- create spark images
--- \param x: x coordinate
--- \param y: y coordinate
-function Spark.New (x, y)
+-- 
+-- @param x x coordinate
+-- @param y y coordinate
+function spark.new (x, y, frame)
 	local self = {
 		_x = x or 1,
 		_y = y or 1,
-		_frame = 1,
+		_frame = frame or 1,
 	}
 
 	self._dx = math.random(-10, 10)
@@ -46,14 +50,15 @@ function Spark.New (x, y)
 		self._dyacc = math.random(4, 5)
 	end
 
-	setmetatable(self, {__index = Spark})
+	setmetatable(self, {__index = spark})
 
 	return self
 end
 
 -------------------------------------------------------------------------------
 -- move the sparks
-function Spark:Move ()
+-- 
+function spark:move ()
 	self._x = self._x + self._dx
 
 	-- x axis
@@ -69,99 +74,6 @@ function Spark:Move ()
 
 	-- y axis
 	self._dy = self._dy + self._dyacc
-end
-
--------------------------------------------------------------------------------
--------------------------------------------------------------------------------
--- Sparak System
-SparkSystem = {}
-
-local SPARK_TOTAL_COUNT = 10 	-- image count
-
--------------------------------------------------------------------------------
--- Init Spark System
-function SparkSystem.Init ()
-	local self = {}
-	self._bmp = WBitmap.Load(MAIN_RES_PKG,
-							 PLAYING_PIC_PATH .. "spark.bmp")
-	local w, h = self._bmp:W() / SPARK_TOTAL_COUNT, self._bmp:H()
-
-	for i = 1, SPARK_TOTAL_COUNT do
-		self[i] = WBitmap.Create(self._bmp, (i-1)*w, 0, w, h)
-	end
-
-	setmetatable(self, {__index = SparkSystem})
-
-	self._sparks = {}
-	self._timermotion = Timer.New(30)
-	self._timerframe = Timer.New(30)
-	self._timermotion:Start()
-	self._timerframe:Start()
-
-	return self
-end
-
--------------------------------------------------------------------------------
--- Create Spark
-function SparkSystem:CreateSpark(x, y)
-	local spark = Spark.New(x, y)
-	table.insert(self._sparks, spark)
---	print("count: ", #self._sparks)
-end
-
--------------------------------------------------------------------------------
--- Draw Sparks
-function SparkSystem:Draw (canvas)
---	print("324")
---	print("sparks: ", #self._sparks)
-	if (#self._sparks == 0) then
-		return
-	end
-
-	for i = 1, #self._sparks do
-		self[self._sparks[i]._frame]:Draw(canvas, 
-					 self._sparks[i]._x + BLOCK_OFFSET_X,
-					 self._sparks[i]._y + BLOCK_OFFSET_Y,
-					  BLIT_STYLE.BLIT_MASK)
-	end
-
-end
-
--------------------------------------------------------------------------------
--- reset sparks
-function SparkSystem:Reset ()
-	self._sparks = {}
-end
-
--------------------------------------------------------------------------------
--- moving sparks
-function SparkSystem:Move ()
-	local count = #self._sparks
---	print("move count: ", count)
-	if (count == 0) then return end
-
-	if (self._timermotion:IsActive()) then
-		for i = 1, count do
-			self._sparks[i]:Move()
-		end
-	end
-
-	if (self._timerframe:IsActive()) then
-		local i = 1
-		while (i <= count) do
---			print("frame: ", self._sparks[i]._frame)
-			if (self._sparks[i]._frame >= SPARK_TOTAL_COUNT) then
---				print("remove")
-				table.remove(self._sparks, i)
-				count = count - 1
-			else
-				self._sparks[i]._frame = self._sparks[i]._frame + 1
-				i = i + 1
-			end
-		end
-	end
-
---	print("count: ", #self._sparks)
 end
 
 -------------------------------------------------------------------------------

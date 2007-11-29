@@ -1,5 +1,5 @@
-GAME_SETTING = {
-	SOUND = true,
+gamesetting = {
+	SOUND = false,
 	MUSIC = true,
 	FULLSCREEN = false,
 }

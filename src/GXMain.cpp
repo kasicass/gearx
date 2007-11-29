@@ -1,4 +1,4 @@
-/*  emacs: -*- mode: cc; coding: gb2312 -*- TAB SIZE: 4 -*-  */
+/*  emacs: -*- mode: c++; coding: gbk -*- TAB SIZE: 4 -*-  */
 
 /*
     Copyright (C) 2007 GearX Team
@@ -31,14 +31,8 @@
  * 
  */
 
-#include "GXInc.h"
-#include "GXFile.h"
-#include "GXBitmap.h"
-#include "GXCanvas.h"
-#include "GXSurface.h"
-#include "GXMusic.h"
-#include "GXTimer.h"
-#include "GXFont.h"
+#include <windows.h>
+#include "GXLua.hpp"
 
 #if defined DEBUG || defined _DEBUG
 #pragma comment(linker, "/SUBSYSTEM:CONSOLE")
@@ -57,73 +51,6 @@
  * @return 
  */
 LRESULT CALLBACK WndProc (HWND, UINT, WPARAM, LPARAM);
-
-///////////////////////////////////////////////////////////////////////////////
-/** 
- * low part of  DWORD, called in lua
- * 
- * @param L pointer to lua state
- * 
- * @return low part of DWORD
- */
-static int LoWord (lua_State* L)
-{
-	LuaBinder binder(L);
-	int v = (int)(binder.checknumber(1));
-	binder.pushnumber((double)(LOWORD(v)));
-	return 1;
-}
-
-/** 
- * called in lua
- * 
- * @param L pointer to lua state
- * 
- * @return high part of DWORD
- */
-static int HiWord(lua_State* L)
-{
-	LuaBinder binder(L);
-	int v = (int)(binder.checknumber(1));
-	binder.pushnumber((double)(HIWORD(v)));
-	return 1;
-}
-
-/** 
- * arithmetic or, called in Lua
- * 
- * @param L pointer to lua state
- * 
- * @return arithemetic or result
- */
-static int AOr(lua_State* L)
-{
-	LuaBinder binder(L);
-	int v = (int)(binder.checknumber(1));
-	int u = (int)(binder.checknumber(2));
-	int ret = u | v;
-	binder.pushnumber((double)(ret));	
-
-	return 1;
-}
-
-/** 
- * arithmetic and, called in Lua
- * 
- * @param L pointer to lua state
- * 
- * @return arithemetic and result
- */
-static int AAnd(lua_State* L)
-{
-	LuaBinder binder(L);
-	int u = (int)(binder.checknumber(1));
-	int v = (int)(binder.checknumber(2));
-	int ret = u & v;
-	binder.pushnumber((double)ret);
-
-	return 1;
-}
 
 ///////////////////////////////////////////////////////////////////////////////
 /** 
@@ -155,29 +82,10 @@ static int pmain (lua_State* L)
 	lua_pushboolean(L, 1);
 	lua_setglobal(L, "_DEBUG");
 #endif
-		
-	lua_pushcfunction(L, LoWord);	// regist LOWORD 
-	lua_setglobal(L, "LOWORD");
-	
-	lua_pushcfunction(L, HiWord);	// regist HIWORD
-	lua_setglobal(L, "HIWORD");
-	
+
 	lua_pushcfunction(L, Quit);		// regist Quit
 	lua_setglobal(L, "Quit");
 
-	lua_pushcfunction(L, AOr);		// regist AOr
-	lua_setglobal(L, "AOr");
-
-	lua_pushcfunction(L, AAnd);		// regist AAnd
-	lua_setglobal(L, "AAnd");
-	
-	luaopen_GXFileLib(L);
-	luaopen_GXBitmapLib(L);
-	luaopen_GXCanvasLib(L);
-	luaopen_GXSurfaceLib(L);
-	luaopen_GXMusicLib(L);
-	luaopen_GXTimer(L);
-	luaopen_FontLib(L);
 	return 0;
 }
 

@@ -1,4 +1,4 @@
--- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
+-- emacs: -*- mode: lua; coding: utf-8; -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -24,5 +24,11 @@
 -------------------------------------------------------------------------------
 
 
-Music = { TYPE = { STREAM = 1, SAMPLE = 2} }
-setmetatable(Music, {__index = GXMusic})
+music = { 
+	TYPE = { 
+		STREAM = 1, 
+		SAMPLE = 2
+	}
+}
+
+setmetatable(music, {__index = GXMusic})

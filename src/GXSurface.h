@@ -1,4 +1,4 @@
-/*  emacs: -*- mode: cc; coding: gb2312 -*- TAB SIZE: 4 -*-  */
+/*  emacs: -*- mode: c; coding: utf-8; -*-  */
 
 /*
     Copyright (C) 2007 GearX Team
@@ -21,6 +21,17 @@
     ChenZaichun@gmail.com
 */
 
+/**
+ * @file   GXSurface.h
+ * @author ChenZaichun <ChenZaichun@gmail.com>
+ * @date   Mon Nov 26 16:26:34 2007
+ * 
+ * @brief  
+ * 
+ * 
+ */
+
+
 #ifndef _GX_SURFACE_H
 #define _GX_SURFACE_H
 
@@ -33,6 +44,7 @@
  * 
  * @return always return 1
  */
+extern "C"
 int luaopen_GXSurfaceLib(lua_State* L);
 
 #endif

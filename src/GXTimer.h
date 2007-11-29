@@ -1,4 +1,4 @@
-/*  emacs: -*- mode: cc; coding: gb2312 -*- TAB SIZE: 4 -*-  */
+/*  emacs: -*- mode: c; coding: utf-8; -*-  */
 
 /*
     Copyright (C) 2007 GearX Team
@@ -27,7 +27,7 @@
 #include "GXInc.h"
 
 /// visible name of timer in Lua
-#define GXTIMER_CLASSNAME	"GXTimer"
+
 
 /** 
  * for register GXTimer in Lua
@@ -36,6 +36,7 @@
  * 
  * @return always return 1
  */
+extern "C"
 int luaopen_GXTimer(lua_State* L);
 
 #endif

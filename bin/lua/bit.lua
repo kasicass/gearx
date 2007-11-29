@@ -1,4 +1,4 @@
--- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
+-- emacs: -*- mode: lua; coding: utf-8; -*- 
 
 --[[
     Copyright (C) 2007 GearX Team

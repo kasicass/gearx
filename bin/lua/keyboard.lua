@@ -1,4 +1,4 @@
--- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
+-- emacs: -*- mode: lua; coding: utf-8; -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -23,12 +23,13 @@
 
 -------------------------------------------------------------------------------
 
-
-KeyListener = {
+keyboard = {
 	_listener = {}
 }
 
-KeyListener._keycode = {
+-------------------------------------------------------------------------------
+
+keyboard._keycode = {
    	UP 	    = 38,
 	DOWN 	= 40,
 	LEFT 	= 37,
@@ -69,7 +70,7 @@ KeyListener._keycode = {
 do
    local c, i = '0', 48
    repeat
-      KeyListener._keycode[c] = i
+      keyboard._keycode[c] = i
       i = i + 1
       c = string.char(string.byte(c) + 1)
    until c == '9'
@@ -78,7 +79,7 @@ do
    repeat
       i = i + 1
       c = string.char(string.byte(c) + 1)
-      KeyListener._keycode[c] = i
+      keyboard._keycode[c] = i
    until c == 'Z'
 end
 
@@ -86,40 +87,40 @@ end
 -- regist new keyboard message handler
 -- \param keycode: key
 -- \param func: callback function
-function KeyListener.Regist (keycode, func)
-	keycode = KeyListener._keycode[keycode]
+function keyboard.regist (keycode, func)
+	keycode = keyboard._keycode[keycode]
 	if (not keycode) then
 		error("invalidate key ")
 	end
 
-	KeyListener._listener[keycode] = func
+	keyboard._listener[keycode] = func
 end
 
 -------------------------------------------------------------------------------
 -- remove key listener
 -- \param keycode: which key to be removed
-function KeyListener.Remove (keycode)
-	KeyListener._listener[keycode] = nil
+function keyboard.remove (keycode)
+	keyboard._listener[keycode] = nil
 end
 
 -------------------------------------------------------------------------------
 -- remove all key binding
-function KeyListener.RemoveAll ()
-	KeyListener._listener = {}
+function keyboard.removeall ()
+	keyboard._listener = {}
 end
 
 -------------------------------------------------------------------------------
-function KeyListener.Check (key)
-	if (KeyListener._all) then
-		if (KeyListener._allfunc) then
-			_, ret = pcall(KeyListener._allfunc, key)
+function keyboard.check (key)
+	if (keyboard._all) then
+		if (keyboard._allfunc) then
+			_, ret = pcall(keyboard._allfunc, key)
 			if (ret) then
 				return
 			end
 		end
 	end
 
-	local func = KeyListener._listener[key]
+	local func = keyboard._listener[key]
 	if (func) then
 		local noerr, msg = pcall(func)
 		if (not noerr) then
@@ -131,15 +132,15 @@ function KeyListener.Check (key)
 end
 
 -------------------------------------------------------------------------------
-function KeyListener.RegistAll (func)
-	KeyListener._all = true
-	KeyListener._allfunc = func
+function keyboard.registall (func)
+	keyboard._all = true
+	keyboard._allfunc = func
 end
 
 -------------------------------------------------------------------------------
-function KeyListener.RemoveAllListener ()
-	KeyListener._all = false
-	KeyListener._allfunc = nil
+function keyboard.removealllistener ()
+	keyboard._all = false
+	keyboard._allfunc = nil
 end
 
 -------------------------------------------------------------------------------
@@ -147,16 +148,16 @@ end
 -- 
 -- @param key
 -- 
-function KeyListener.KeyDown (key)
+function keyboard.keydown (key)
 	if (type(x) ~= "number") then
 		key = key:upper()
 		if x == "CTRL" then
-			return KeyListener.KeyDown("LCTRL") or KeyListener.KeyDown("RCTRL")
+			return keyboard.KeyDown("LCTRL") or keyboard.KeyDown("RCTRL")
 		elseif x == "SHIFT" then
-			return KeyListener.KeyDown("LSHIFT") or KeyListener.KeyDown("RSHIFT")
+			return keyboard.KeyDown("LSHIFT") or keyboard.KeyDown("RSHIFT")
 		end
 
-		key = KeyListener._keycode[key]
+		key = keyboard._keycode[key]
 	end
 end
 

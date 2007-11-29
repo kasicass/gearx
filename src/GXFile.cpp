@@ -1,12 +1,40 @@
+//  emacs: -*- mode: c++; coding: utf-8; -*-
 
-/*!
-* $Id$
-*
-* \brief	对于WFile的luabind，lua中使用
+/*
+    Copyright (C) 2007 GearX Team
+
+    This source code is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    This source code is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+    $Id$
+    ChenZaichun@gmail.com
 */
 
+/**
+ * @file   GXFile.h
+ * @author ChenZaichun <ChenZaichun@gmail.com>
+ * @date   Sun Nov 25 17:28:30 2007
+ * 
+ * @brief  WFile for lua
+ * 
+ * 
+ */
+
+///////////////////////////////////////////////////////////////////////////////
 #include "GXFile.h"
 
+///////////////////////////////////////////////////////////////////////////////
 static int GXFile_OpenDataFile(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -29,15 +57,6 @@ static int GXFile_Load(lua_State* L)
 	return 0;
 }
 
-static int GXFile_Data(lua_State* L)
-{
-//	LuaBinder binder(L);
-//	WFile* file = (WFile*)(binder.checkusertype(1, GXFILE_CLASSNAME));
-//	binder.pushpointer(file->GetPtr());
-
-	return 0;
-}
-
 static int GXFile_Open(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -52,12 +71,12 @@ static int GXFile_Read(lua_State* L)
 {
 	LuaBinder binder(L);
 	WFile* file = (WFile*)(binder.checkusertype(1, GXFILE_CLASSNAME));
-	void * buffer = binder.checkpointer(2);//binder.checkusertype(-2, GX_DATA_CLASSNAME);
+	void * buffer = binder.checkpointer(2);
 	int size = binder.checkint(3);
 	int read = 0;
 
 	file->Read(buffer, size, &read);
-	binder.pushnumber((double)(read));
+	binder.pushnumber((lua_Number)(read));
 
 	return 1;
 }
@@ -123,11 +142,10 @@ static int GXFile_Destory(lua_State* L)
 	return 0;
 }
 
+///////////////////////////////////////////////////////////////////////////////
 static const luaL_reg GXFileLib[] = {
 	{"OpenDataFile",	GXFile_OpenDataFile},
-//	{"Destroy",			GXBitmap_Destory},
 	{"Load",			GXFile_Load},
-//	{"Data",			GXFile_Data},
 	{"Open",			GXFile_Open},
 //	{"Read",			GXFile_Read},
 	{"Skip",			GXFile_Skip},
@@ -138,6 +156,8 @@ static const luaL_reg GXFileLib[] = {
 	{NULL,				NULL},
 };
 
+///////////////////////////////////////////////////////////////////////////////
+extern "C"
 int luaopen_GXFileLib(lua_State* L)
 {
 	LuaBinder binder(L);

@@ -1,4 +1,4 @@
--- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
+-- emacs: -*- mode: lua; coding: utf-8; -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -23,41 +23,45 @@
 
 -------------------------------------------------------------------------------
 -- require files
-dofile("lua/cfg.lua")
-dofile("lua/serialize.lua")
+require("gamesetting")
+require("serialize")
+-- dofile("lua/cfg.lua")
+-- dofile("lua/serialize.lua")
+
+module("settings", package.seeall)
 
 -------------------------------------------------------------------------------
 -- return music setting
-function IsPlayMusic ()
-	return GAME_SETTING.MUSIC
+function isplaymusic ()
+	return gamesetting.MUSIC
 end
 
 -- return sound setting
-function IsPlaySound ()
-	return GAME_SETTING.SOUND
+function isplaysound ()
+	return gamesetting.SOUND
 end
 
-function PlayMusic (play)
-	GAME_SETTING.MUSIC = play
+function playmusic (play)
+	gamesetting.MUSIC = play
 end
 
-function PlaySound (play)
-	GAME_SETTING.SOUND = play
+function playsound (play)
+	gamesetting.SOUND = play
 end
 
-function FullScreen (fs)
-	GAME_SETTING.FULLSCREEN = fs
+function fullscreen (fs)
+	gamesetting.FULLSCREEN = fs
 end
 
-function IsFullScreen ()
-	return GAME_SETTING.FULLSCREEN
+function isfullscreen ()
+	return gamesetting.FULLSCREEN
 end
 
 -------------------------------------------------------------------------------
 -- save settings
-function SaveSettings ()
-	local f = assert(io.open("lua/cfg.lua", "w"))
-	local str = "GAME_SETTING = " .. serialize(GAME_SETTING)
+function savesettings ()
+	local f = assert(io.open("lua/gamesetting.lua", "w"))
+	local str = "gamesetting = " .. serialize.serialize(gamesetting)
 	f:write(str)
 	f:close()
 end

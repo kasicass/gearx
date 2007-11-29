@@ -1,13 +1,46 @@
+//  emacs: -*- mode: c++; coding: utf-8; -*-
 
-/*!
- * $Id$
- *
- * \brief	WCanvas Lua bind
+/*
+    Copyright (C) 2007 GearX Team
+
+    This source code is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    This source code is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+    $Id$
+    ChenZaichun@gmail.com
+*/
+
+/**
+ * @file   GXCanvas.cpp
+ * @author ChenZaichun <ChenZaichun@gmail.com>
+ * @date   Mon Nov 26 15:37:48 2007
+ * 
+ * @brief  Wcanvas Lua bind
+ * 
+ * 
  */
 
 #include "GXCanvas.h"
 
 //////////////////////////////////////////////////////////////////////////
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXCanvas_Create(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -20,6 +53,13 @@ static int GXCanvas_Create(lua_State* L)
 	return 1;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXCanvas_Destory(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -30,6 +70,13 @@ static int GXCanvas_Destory(lua_State* L)
 	return 0;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXCanvas_ViewPort(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -42,6 +89,13 @@ static int GXCanvas_ViewPort(lua_State* L)
 	return 0;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXCanvas_MoveTo(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -54,6 +108,13 @@ static int GXCanvas_MoveTo(lua_State* L)
 	return 0;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXCanvas_Move(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -66,6 +127,13 @@ static int GXCanvas_Move(lua_State* L)
 	return 0;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXCanvas_GetX(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -75,6 +143,13 @@ static int GXCanvas_GetX(lua_State* L)
 	return 1;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXCanvas_GetY(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -84,6 +159,13 @@ static int GXCanvas_GetY(lua_State* L)
 	return 1;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXCanvas_GetW(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -93,6 +175,13 @@ static int GXCanvas_GetW(lua_State* L)
 	return 1;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXCanvas_GetH(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -102,6 +191,13 @@ static int GXCanvas_GetH(lua_State* L)
 	return 1;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXCanvas_GetViewPort(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -116,6 +212,13 @@ static int GXCanvas_GetViewPort(lua_State* L)
 	return 2;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXCanvas_Clear(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -127,6 +230,13 @@ static int GXCanvas_Clear(lua_State* L)
 	return 0;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXCanvas_Draw(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -139,6 +249,13 @@ static int GXCanvas_Draw(lua_State* L)
 	return 0;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXCanvas_UnChange(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -148,6 +265,13 @@ static int GXCanvas_UnChange(lua_State* L)
 	return 0;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXCanvas_Change(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -157,6 +281,13 @@ static int GXCanvas_Change(lua_State* L)
 	return 0;
 }
 
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
 static int GXCanvas_Reset(lua_State* L)
 {
 	LuaBinder binder(L);
@@ -167,17 +298,8 @@ static int GXCanvas_Reset(lua_State* L)
 	return 0;
 }
 
-static int GXCanvas_Msg(lua_State* L)
-{
-	LuaBinder binder(L);
-	const char* msg = binder.checkstring(1);
-
-	MessageBox(NULL, msg, msg, MB_OK);
-
-	return 0;
-}
-
 //////////////////////////////////////////////////////////////////////////
+/// canvas exported function for lua
 static const luaL_reg GXCanvasLib[] = {
 	{"Create",		GXCanvas_Create},
 	{"ViewPort",	GXCanvas_ViewPort},
@@ -193,11 +315,18 @@ static const luaL_reg GXCanvasLib[] = {
 	{"UnChange",	GXCanvas_UnChange},
 	{"Change",		GXCanvas_Change},
 	{"Reset",		GXCanvas_Reset},
-	{"Msg",			GXCanvas_Msg},
 	{NULL,			NULL},
 };
 
 //////////////////////////////////////////////////////////////////////////
+/** 
+ * 
+ * 
+ * @param L 
+ * 
+ * @return 
+ */
+extern "C"
 int luaopen_GXCanvasLib(lua_State* L)
 {
 	LuaBinder binder(L);

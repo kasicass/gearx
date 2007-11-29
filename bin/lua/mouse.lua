@@ -1,4 +1,4 @@
--- emacs: -*- mode: lua; coding: gb2312 -*- TAB SIZE: 4 -*- 
+-- emacs: -*- mode: lua; coding: utf-8; -*- 
 
 --[[
     Copyright (C) 2007 GearX Team
@@ -25,31 +25,36 @@
 
 -------------------------------------------------------------------------------
 -- Mouse Listener
-MouseListener = {
+-- 
+mouse = {
 	_listener = {}
 }
 
 -------------------------------------------------------------------------------
 -- regist mouse message handlder
--- \param msg: message to be handed
--- \param func: callback function, the callback function must have the x, y 
+-- 
+-- @param msg message to be handed
+-- @param func callback function, the callback function must have the x, y 
 --              parameter handler
-function MouseListener.Regist (msg, func)
-	if (not MouseListener._listener[msg]) then
-		MouseListener._listener[msg] = {}
+-- 
+function mouse.regist (msg, func)
+	if (not mouse._listener[msg]) then
+		mouse._listener[msg] = {}
 	end
 
-	table.insert(MouseListener._listener[msg], func)
+	table.insert(mouse._listener[msg], func)
 end
 
 -------------------------------------------------------------------------------
 -- check for mouse message
+-- 
 -- \param msg: which message to be check
 -- \param x: x coordinate
 -- \param y: y coordinate
-function MouseListener.Check (msg, x, y)
-	if (not MouseListener._listener[msg]) then return end
-	for i, t in ipairs(MouseListener._listener[msg]) do
+-- 
+function mouse.check (msg, x, y)
+	if (not mouse._listener[msg]) then return end
+	for i, t in ipairs(mouse._listener[msg]) do
 		local noerr, msg = pcall(t, x, y)
 		if (not noerr) then
 			return error("call for " .. msg .. "check failed: " .. msg)
@@ -63,12 +68,14 @@ end
 
 -------------------------------------------------------------------------------
 -- remove handler
+-- 
 -- \param msg: which msg handler to be removed
 -- \param func: which hanlder to be removed
-function MouseListener.Remove (msg, func)
-	for i, t in ipairs(MouseListener._listener[msg]) do
+-- 
+function mouse.remove (msg, func)
+	for i, t in ipairs(mouse._listener[msg]) do
 		if (t == func) then
-			table.remove(MouseListener._listener[msg], i)
+			table.remove(mouse._listener[msg], i)
 		end
 	end
 end
@@ -76,10 +83,10 @@ end
 
 -------------------------------------------------------------------------------
 -- remove all handler
-function MouseListener.RemoveAll ()
--- 	for v, t in pairs(MouseListener._listener) do
--- 		MouseListener._listener[v] = nil
+function mouse.removeall ()
+-- 	for v, t in pairs(mouse._listener) do
+-- 		mouse._listener[v] = nil
 -- 	end
 
-	MouseListener._listener = {}
+	mouse._listener = {}
 end

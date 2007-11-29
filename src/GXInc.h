@@ -34,6 +34,10 @@
 #ifndef _GX_INC_H
 #define _GC_INC_H
 
+#pragma warning(disable:4267)
+#pragma warning(disable:4312)
+#pragma warning(disable:4311)
+
 #include <windows.h>
 #include "windsoul.h"
 #include "wsfile.h"
@@ -65,7 +69,10 @@
 
 /// music name explose in Lua
 #define GXMUSIC_CLASSNAME	"GXMusic"
+#define GXTIMER_CLASSNAME	"GXTimer"
 
+extern "C"
+__declspec(dllexport) int luaopen_gxbase(lua_State* L);
 
 #define new debug_new
 

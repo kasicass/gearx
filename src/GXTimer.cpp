@@ -1,4 +1,4 @@
-/*  emacs: -*- mode: cc; coding: gb2312 -*- TAB SIZE: 4 -*-  */
+//  emacs: -*- mode: c++; coding: utf-8; -*- 
 
 /*
     Copyright (C) 2007 GearX Team
@@ -21,11 +21,22 @@
     ChenZaichun@gmail.com
 */
 
+/**
+ * @file   GXTimer.cpp
+ * @author ChenZaichun <ChenZaichun@gmail.com>
+ * @date   Mon Nov 26 16:27:01 2007
+ * 
+ * @brief  GXTimer Lua bind
+ * 
+ * 
+ */
+
+
 #include "GXTimer.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 /** 
- *  π”√QueryPerformanceCount¿¥º∆ ±
+ * ‰ΩøÁî®QueryPerformanceCountÊù•ËÆ°Êó∂
  * 
  */
 class GXTimer
@@ -218,6 +229,7 @@ static const luaL_reg GXTimerLib[] = {
 };
 
 //////////////////////////////////////////////////////////////////////////
+extern "C"
 int luaopen_GXTimer(lua_State* L)
 {
 	LuaBinder binder(L);

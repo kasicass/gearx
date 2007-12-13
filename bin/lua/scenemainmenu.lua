@@ -128,9 +128,9 @@ function scenemainmenu.init ()
 
 	self._ani = animation.new(MAIN_RES_PKG, 
 							  "data/pic/mainmenu/mainmenu_cucuma.bmp",
-							  4, false, 0, 400, 300)
+							  4, false, 0, 400, 100)
 
-	self._ani:setduration(60)
+	self._ani:setduration(40)
 	self._ani:start()
 
 	self._change = true

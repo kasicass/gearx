@@ -23,6 +23,7 @@
 
 -------------------------------------------------------------------------------
 -- block of scattered
+-- 
 block = {}
 
 -------------------------------------------------------------------------------
@@ -33,6 +34,7 @@ block = {}
 -- @param imgidx	image index
 -- 
 -- @return block obj
+-- 
 function block.new (x, y, imgidx)
 	local self = {
 		_x = x or 0, 
@@ -45,8 +47,21 @@ function block.new (x, y, imgidx)
 	return self
 end
 
+function block:x ()
+	return self._x
+end
+
+function block:y ()
+	return self._y
+end
+
+function block:imgidx ()
+	return self._imgidx
+end
+
 -------------------------------------------------------------------------------
 -- scattered block list
+-- 
 scatteredblocks = {}
 
 -------------------------------------------------------------------------------
@@ -67,9 +82,9 @@ function scatteredblocks:reset ()
 		count = count - 1
 	end
 
---	self = {}
---	self._dy = 32
---	setmetatable(self, {__index = scatteredblocks})
+	-- self = {}
+	-- self._dy = 32
+	-- setmetatable(self, {__index = scatteredblocks})
 end
 
 -------------------------------------------------------------------------------
@@ -79,7 +94,6 @@ end
 -- 
 function scatteredblocks:add (block)
 	table.insert(self, block)
---	print("count", #self)
 end
 
 -------------------------------------------------------------------------------
@@ -117,4 +131,6 @@ function scatteredblocks:draw (canvas, gears)
 				   self[i]._imgidx)
 	end
 end
+
+-------------------------------------------------------------------------------
 

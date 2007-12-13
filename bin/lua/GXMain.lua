@@ -66,7 +66,7 @@ font = WFont.Create("Verdana", 24)
 gamestate = {
 --	_state = GAME_STATES.INIT,
 	_state = GAME_STATES.MAINMENU,
---	_state = GAME_STATES.PLAYING,
+--	_state = GAME_STATES.HIGHSCORE,
 	_laststate = -1
 }
 

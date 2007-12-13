@@ -23,6 +23,7 @@
 
 -------------------------------------------------------------------------------
 require("highscore")
+require("keyboard")
 
 -------------------------------------------------------------------------------
 scenehighscore = {}
@@ -35,10 +36,9 @@ function scenehighscore.init ()
 
 	self._bg = WBitmap.Load(MAIN_RES_PKG,
 							HIGHSCORE_PIC_PATH .. "background.bmp")
-
 	keyboard.regist("ESC", function ()
-								  pcall(setgamestate, GAME_STATES.MAINMENU)
-							  end)
+							   pcall(setgamestate, GAME_STATES.MAINMENU)
+						   end)
 
 	self._change = true
 	setmetatable(self, {__index = scenehighscore})
@@ -48,7 +48,7 @@ end
 
 -------------------------------------------------------------------------------
 function scenehighscore:destroy()
-	keyboard.removeall()
+	keyboard.remove("ESC")
 end
 
 -------------------------------------------------------------------------------
@@ -59,8 +59,8 @@ function scenehighscore:draw (canvas)
 	else
 		canvas:UnChange()
 	end
-
-	for i=1, 10 do
+	
+	for i = 1, 10 do
 		local s
 		if (highscore[i]) then
 			s = string.format("%-2d.%16s%20d", i, highscore[i][1] or "",

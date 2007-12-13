@@ -48,4 +48,5 @@ PLAYING_STATE = {
 	PLAYING = 2,
 	PAUSE = 3,
 	OVER = 4,
+	EXIT = 5,					-- exit playing state
 }

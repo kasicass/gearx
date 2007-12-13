@@ -59,5 +59,5 @@ end
 
 -------------------------------------------------------------------------------
 function scenecredit:destroy ()
-	keyboard.removeall()
+	keyboard.remove("ESC")
 end

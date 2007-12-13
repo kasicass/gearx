@@ -85,7 +85,7 @@ function server:process (list, datalist)
 			data:upscrollimg()
 		elseif (op == operations.DOWNSCROLLIMG) then
 			-- down scroll image
-			data:downscorllimg()
+			data:downscrollimg()
 		elseif (op == operations.MOVEDOWN) then
 			-- move down
 			data:movedown()

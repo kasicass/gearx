@@ -75,22 +75,6 @@ end
 
 -- playing
 function sceneplaying:playing (canvas)
-
-	local function releaseRes()
-		print("playing release")
-		keyboard.remove("UP")
-		keyboard.remove("DOWN")
-		keyboard.remove("LEFT")
-		keyboard.remove("RIGHT")
-		keyboard.remove("P")
-		keyboard.remove("SPACE")
-
-		self._gears = nil
-		self._blocks = nil
-		self._triblock = nil
-		self._sparksys = nil
-	end
-	
 	self._gears = gears.init()
  	self._blocks = blocktable.init()
  	self._triblock = triblock.new()
@@ -103,7 +87,7 @@ function sceneplaying:playing (canvas)
 								local op = "" .. operations.EXIT
 								t_socket.senddata(self._t_socket, op, #op)
 								socket.send(self._t_socket)
-								releaseRes()
+								self._state = PLAYING_STATE.EXIT
 								pcall(setgamestate, GAME_STATES.MAINMENU)
 							   end)
 
@@ -166,7 +150,7 @@ function sceneplaying:playing (canvas)
 
 	coroutine.yield()
 
-	while (true) do
+	while (self._state == PLAYING_STATE.PLAYING) do
 		local op = "" .. operations.UPDATE
 		t_socket.senddata(self._t_socket, op, #op)
 		socket.send(self._t_socket)	
@@ -179,6 +163,9 @@ function sceneplaying:playing (canvas)
 		_, iend, _s = string.find(retdata, "^(%d+)")
 		self._state = tonumber(_s)
 		if (self._state == PLAYING_STATE.OVER) then
+			print("over")
+			releaseRes()
+--			pcall(setgamestate, GAME_STATES.HIGHSCORE)
 			break
 		end
 		
@@ -283,6 +270,20 @@ function sceneplaying:playing (canvas)
 		self._blocks:draw(canvas, self._gears)
 		coroutine.yield()
 	end
+
+	keyboard.remove("UP")
+	keyboard.remove("DOWN")
+	keyboard.remove("LEFT")
+	keyboard.remove("RIGHT")
+	keyboard.remove("P")
+	keyboard.remove("SPACE")
+
+	self._gears = nil
+	self._blocks = nil
+	self._triblock = nil
+	self._sparksys = nil
+	self._sparkimg = nil
+	self._scatterlist = nil
 end
 
 -- pause
@@ -309,12 +310,6 @@ end
 
 -- over
 function sceneplaying:over (canvas)
-	local function relaseRes () 
-		keyboard.remove("BACKSPACE")
-		keyboard.remove("ENTER")
-		keyboard.removealllistener()
-	end
-
 	local name = ""
 	keyboard.registall(function (key)
 							  local char
@@ -341,8 +336,8 @@ function sceneplaying:over (canvas)
 						  end)
 
 	keyboard.regist("ENTER", function ()
-								 score.addacoretohighscore(name, self._score)
-								 relaseRes()
+								 self._state = PLAYING_STATE.EXIT
+								 score.addscoretohighscore(name, self._score)
 								 pcall(setgamestate, GAME_STATES.HIGHSCORE)
 								end)
 	keyboard.regist("BACKSPACE", function ()
@@ -357,10 +352,8 @@ function sceneplaying:over (canvas)
 
 	coroutine.yield()
 	
-	while (true) do
-		print("before check score")
+	while (self._state == PLAYING_STATE.OVER) do
 		if (score.checkhighscore(self._score)) then
-			print("check ok")
 			canvas:Change()
 			font:Draw(canvas, name, 0xff, 370, 300)
 			self._bmpplayername:Draw(canvas, 
@@ -369,11 +362,15 @@ function sceneplaying:over (canvas)
 									 BLIT_STYLE.BLIT_MASK)
 			coroutine.yield()
 		else
-			relaseRes()
+			pcall(setgamestate, GAME_STATES.HIGHSCORE)
+--			print("highscore")
 			break
 		end
 	end
 
+	keyboard.remove("BACKSPACE")
+	keyboard.remove("ENTER")
+	keyboard.removealllistener()
 --	pcall(SetGameState, GAME_STATES.GAMEOVER)
 end
 -------------------------------------------------------------------------------
@@ -412,7 +409,7 @@ function sceneplaying.init ()
 	end
 
 	setmetatable(self, {__index = sceneplaying})
-	socket.connect(self._t_socket, DEFAULT_SERVER_PORT, "192.168.0.233")
+	socket.connect(self._t_socket, DEFAULT_SERVER_PORT, "127.0.0.1")
 
 	return self
 end
@@ -420,6 +417,7 @@ end
 -------------------------------------------------------------------------------
 function sceneplaying:destroy ()
 	-- release socket lib
+--	print("playing shutdown")
 	self._t_socket = nil
 --	socket.shutdown()
 
@@ -437,6 +435,11 @@ function sceneplaying:draw (canvas)
 	elseif (self._state == PLAYING_STATE.PAUSE) then
 		coroutine.resume(PLAYING_TASKS._pause, canvas)
 	elseif (self._state == PLAYING_STATE.OVER) then
+		coroutine.resume(PLAYING_TASKS._over, canvas)
+	else 
+		coroutine.resume(PLAYING_TASKS._tostart, canvas)
+		coroutine.resume(PLAYING_TASKS._playing, canvas)
+		coroutine.resume(PLAYING_TASKS._pause, canvas)
 		coroutine.resume(PLAYING_TASKS._over, canvas)
 	end
 

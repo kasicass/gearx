@@ -84,7 +84,7 @@ function addscoretohighscore (name, score)
 		table.insert(highscore, {name, score})
 	elseif (count == 10) then
 		table.remove(highscore, 10)
-		table.insert(highscore)
+		table.insert(highscore, score)
 	end
 
 	sorthighscore()

@@ -66,7 +66,7 @@ function scenelogo:draw (canvas)
 	self._logo._bmp:SetData(alpha)
 	self._logo._bmp:Draw(canvas, self._logo._x, self._logo._y, BLIT_STYLE.BLIT_TRANS)
 	self._bg:Draw(canvas, self._logo._x, self._logo._y, BLIT_STYLE.BLIT_COPY)
-	alpha = alpha - 1
+	alpha = alpha - 2
 end
 
 

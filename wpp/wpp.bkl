@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+
+<!--
+    Copyright (C) 2007 GearX Team
+
+    This source code is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    This source code is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+    $Id$
+    ChenZaichun@gmail.com
+-->
+
+<makefile>
+  <include file="presets/simple.bkl"/>
+  <set var="DEBUGBUILDPOSTFIX">
+    <if cond="DEBUG=='0'">REL</if>
+    <if cond="DEBUG=='1'">DBG</if>
+  </set>
+  <set var="BUILDDIR">..\build\$(DEBUGBUILDPOSTFIX)</set>
+  <set var="BINDIR">..\..\bin</set>
+
+  <action id="assembly">
+    <command>nasmw -f coff -o $(BUILDDIR)\box16.obj box16.asm</command>
+    <command>nasmw -f coff -o $(BUILDDIR)\blit16.obj blit16.asm </command>
+    <command>nasmw -f coff -o $(BUILDDIR)\text16.obj text16.asm</command>
+    <command>nasmw -f coff -o $(BUILDDIR)\alpha16.obj alpha16.asm</command>
+    <command>nasmw -f coff -o $(BUILDDIR)\font16.obj font16.asm</command>
+    <command>nasmw -f coff -o $(BUILDDIR)\string.obj string.asm</command>
+    <command>nasmw -f coff -o $(BUILDDIR)\surface.obj surface.asm</command>
+  </action>
+
+  <!-- windsoul dll library -->
+  <dll id="windsoul" template="simple">
+    <set var="OUTNAME">
+      <if cond="DEBUG=='1'">wsdebug</if>
+      <if cond="DEBUG=='0'">windsoul</if>
+    </set>
+
+    <threading>multi</threading>
+    <sources>achannel.cpp bitmap.cpp blit.cpp datafile.cpp font.cpp gdi.cpp</sources>
+    <sources>geometry.cpp memory.cpp object.cpp readbmp.cpp readtga.cpp</sources>
+    <sources>text.cpp timer.cpp wsapi.cpp wsurface.cpp CANVAS.cpp WSTRING.cpp</sources>
+    <sources>$(fileList('.\include\wpp\*.h'))</sources>
+    <ldlibs>$(BUILDDIR)\box16</ldlibs>
+    <ldlibs>$(BUILDDIR)\blit16</ldlibs>
+    <ldlibs>$(BUILDDIR)\text16</ldlibs>
+    <ldlibs>$(BUILDDIR)\alpha16</ldlibs>
+    <ldlibs>$(BUILDDIR)\string</ldlibs>
+    <ldlibs>$(BUILDDIR)\font16</ldlibs>
+    <ldlibs>$(BUILDDIR)\surface</ldlibs>
+    <depends>assembly</depends>
+    <win32-res>windsoul.rc</win32-res>
+    <!-- <sources>$(fileList('*.cpp'))</sources> -->
+    <!-- <sources>$(fileList('./wapp/*.cpp'))</sources> -->
+    <!-- <headers>$(fileList('*.h'))</headers> -->
+    <define>_MSVC</define>
+    <define>WINDSOUL_EXPORTS</define>
+    <libname>$(BINDIR)\$(OUTNAME)</libname>
+    <dllname>$(BINDIR)\$(OUTNAME)</dllname>
+    <include>..\include\wpp/</include>
+    <sys-lib>kernel32</sys-lib>
+    <sys-lib>user32</sys-lib>
+    <sys-lib>gdi32</sys-lib>
+  </dll>
+</makefile>

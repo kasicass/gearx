@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+<!--
+    Copyright (C) 2007 GearX Team
+
+    This source code is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+
+    This source code is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+
+    $Id$
+    ChenZaichun@gmail.com
+-->
+
+<makefile>
+  <include file="presets/simple.bkl"/>
+
+  <template id="sub">
+    <installable>yes</installable>
+    <dependency-of>all</dependency-of>
+  </template>
+
+  <subproject id="gxbase" template="sub">
+    <dir>src</dir>
+    <depends>lua51</depends>
+    <depends>windsoul</depends>
+  </subproject>
+
+  <subproject id="gearx" template="sub">
+    <dir>src</dir>
+  </subproject>
+
+  <subproject id="lua51" template="sub">
+    <dir>lua51</dir>
+  </subproject>
+
+  <subproject id="client" template="sub">
+    <dir>client</dir>
+    <depends>lua51</depends>
+  </subproject>
+
+  <subproject id="windsoul" template="sub">
+    <dir>wpp</dir>
+  </subproject>
+
+  <subproject id="socket" template="sub">
+    <dir>socket</dir>
+    <depends>lua51</depends>
+  </subproject>
+
+  <subproject id="server" template="sub">
+    <dir>server</dir>
+    <depends>lua51</depends>
+  </subproject>
+</makefile>
